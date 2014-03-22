@@ -1,3 +1,5 @@
+/*Turns a file with a list of file sizes into a total size */
+
 use common::utils::{float_array_from_file, string_getter, answer_to_bool};
 use common::utils::parse_string_to_chars;
 
