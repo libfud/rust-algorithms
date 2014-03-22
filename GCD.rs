@@ -1,6 +1,4 @@
-pub mod common {
-    pub mod utils;
-}
+pub mod common { pub mod utils; }
 
 fn GCD(x: int, y: int) -> int {
     let mut divisor: int;
