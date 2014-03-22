@@ -1,3 +1,5 @@
+/* merge sort */
+
 use std::vec;
 
 pub mod common{ pub mod utils; }
