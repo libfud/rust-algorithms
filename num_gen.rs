@@ -1,3 +1,5 @@
+/* generates an array of random numbers */
+
 pub mod common { pub mod utils; }
 
 fn main() {
