@@ -8,7 +8,14 @@ pub mod common {
 }
 
 fn main() {
-    let pathname = ~"common/output2.txt";
+    let args = std::os::args();
+    let mut pathname: ~str;
+    if args.len() > 1 {
+        pathname = args[1];
+    }
+    else {
+        pathname = string_getter("What is the name of the file?");
+    }
     let (array, block_size_array)  = float_array_from_file(pathname);
     let array_size = array.len();
     let mut total: f64 = 0.0;
