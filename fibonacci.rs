@@ -1,3 +1,5 @@
+/*Returns the nth element of the fibonacci sequence.*/
+
 pub mod common { pub mod utils; }
 
 fn fib ( nth_elem: int ) -> ~[f64] {
