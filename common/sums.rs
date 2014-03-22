@@ -1,3 +1,5 @@
+/*simple summation tool*/
+
 use std::int;
 use std::io;
 use std::io::buffered::BufferedReader;

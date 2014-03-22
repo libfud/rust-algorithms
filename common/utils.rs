@@ -1,3 +1,5 @@
+/* Commonly used functions */
+
 use std::io;
 use std::io::File;
 use std::io::buffered::BufferedReader;

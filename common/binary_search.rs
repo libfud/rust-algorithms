@@ -1,3 +1,5 @@
+/*binary search implementation*/
+
 pub fn binary_search(array: ~[int], search_value: int, first_elem: int, last_elem: int) -> int {
     if last_elem - first_elem <= 0 { return -1 }
     else { 
