@@ -1,5 +1,5 @@
 /* Takes a numeric input and finds if there are two values in a sorted
-array whose sum is equal to the input. */
+array whose sum is equal to the input.  */
 
 pub mod common {
     pub mod utils;              //stuff to get numeric input and create arrays
