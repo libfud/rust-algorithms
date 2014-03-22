@@ -1,3 +1,5 @@
+/* Decomposes a number into its prime factors.*/
+
 pub mod common { pub mod utils; }
 
 fn decomp(x_orig: int) -> ~[int] {
