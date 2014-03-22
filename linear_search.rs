@@ -1,3 +1,5 @@
+/*linear search*/
+
 mod common {
     pub mod utils;
 }
