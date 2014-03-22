@@ -3,9 +3,7 @@
 use common::utils::{float_array_from_file, string_getter, answer_to_bool};
 use common::utils::parse_string_to_chars;
 
-pub mod common {
-    pub mod utils;
-}
+pub mod common { pub mod utils; }
 
 fn main() {
     let args = std::os::args();
@@ -17,17 +15,27 @@ fn main() {
         pathname = string_getter("What is the name of the file?");
     }
     let (array, block_size_array)  = float_array_from_file(pathname);
+    /* The function float_array_from_file uses parse_string_to_float, which
+    when used as intended splits a string into a floating point number and
+    the remainder of the string. Since we're using this on a file which lists
+    files using different sizes (KB, MB, GB...) We'll need the rest of the
+    string to determine what size each file listed is*/
     let array_size = array.len();
     let mut total: f64 = 0.0;
     let mut i = 0;
     
     while i < array_size {
         let block_size = parse_string_to_chars(block_size_array[i].clone());
+        /*String manipulation in rust is kind of a chore, so I prefer to
+        convert strings to char arrays when doing in this kind of thing.
+        This is not very efficient and rather lazy on my part, until I
+        figure out a proper method of doing this. */
         let file_size = match block_size[0] {
             'K' => array[i]/1000.0,
             'M' => array[i],
             'G' => array[i]*1000.0,
-            _   => array[i]
+            _   => array[i] //I could take out the M case, but I think it
+            //preserves intentions by leaving it in, if I add other cases.
         };
         total += file_size;
         i+=1;
