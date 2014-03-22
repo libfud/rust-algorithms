@@ -1,3 +1,5 @@
+/* Merge sort with insertion sort */
+
 use std::num::from_uint;
 
 pub mod common {
