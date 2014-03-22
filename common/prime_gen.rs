@@ -1,3 +1,5 @@
+/*generates an array of prime numbers*/
+
 use std::num::sqrt;
 
 pub fn prime_gen(upper_lim: int) -> ~[int] {

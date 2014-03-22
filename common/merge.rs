@@ -1,3 +1,5 @@
+/*Merge function for merge sort */
+
 use std::vec;
 
 pub fn merge(left_orig: ~[int], right_orig: ~[int]) -> ~[int] {
