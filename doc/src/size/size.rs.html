@@ -107,9 +107,7 @@
 <span id='69'>69</span>
 <span id='70'>70</span>
 <span id='71'>71</span>
-<span id='72'>72</span>
 </pre><pre class='rust'>#[crate_id = &quot;size&quot;];
-#[crate_type=&quot;lib&quot;];
 
 //!Turns a file with a list of file sizes into a total size
 
@@ -129,11 +127,11 @@ fn main() {
         pathname = string_getter(&quot;What is the name of the file?&quot;);
     }
     let (array, block_size_array)  = float_array_from_file(pathname);
-    /* The function float_array_from_file uses parse_string_to_float, which
-    when used as intended splits a string into a floating point number and
-    the remainder of the string. Since we&#39;re using this on a file which lists
-    files using different sizes (KB, MB, GB...) We&#39;ll need the rest of the
-    string to determine what size each file listed is*/
+    // The function float_array_from_file uses parse_string_to_float, which
+    // when used as intended splits a string into a floating point number and
+    // the remainder of the string. Since we&#39;re using this on a file which lists
+    // files using different sizes (KB, MB, GB...) We&#39;ll need the rest of the
+    // string to determine what size each file listed is
     let array_size = array.len();
     let mut total: f64 = 0.0;
     let mut i = 0;

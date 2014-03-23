@@ -1,5 +1,4 @@
 #[crate_id = "size"];
-#[crate_type="lib"];
 
 //!Turns a file with a list of file sizes into a total size
 
@@ -19,11 +18,11 @@ fn main() {
         pathname = string_getter("What is the name of the file?");
     }
     let (array, block_size_array)  = float_array_from_file(pathname);
-    /* The function float_array_from_file uses parse_string_to_float, which
-    when used as intended splits a string into a floating point number and
-    the remainder of the string. Since we're using this on a file which lists
-    files using different sizes (KB, MB, GB...) We'll need the rest of the
-    string to determine what size each file listed is*/
+    // The function float_array_from_file uses parse_string_to_float, which
+    // when used as intended splits a string into a floating point number and
+    // the remainder of the string. Since we're using this on a file which lists
+    // files using different sizes (KB, MB, GB...) We'll need the rest of the
+    // string to determine what size each file listed is
     let array_size = array.len();
     let mut total: f64 = 0.0;
     let mut i = 0;

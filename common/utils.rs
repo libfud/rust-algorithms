@@ -5,6 +5,7 @@ use std::io::File;
 use std::io::buffered::BufferedReader;
 use std::rand::{task_rng, Rng};
 
+//Takes a yes or no answer in string form and returns a boolean value.
 pub fn answer_to_bool(string_orig: ~str) -> bool {
     let string = string_orig;
     match string.trim_left() {
