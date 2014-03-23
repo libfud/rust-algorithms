@@ -169,12 +169,10 @@ pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
 
 pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
     let date_string = string_orig.trim_left().to_owned();
-    let date_chars = parse_string_to_chars(date_string);
+    let mut date_chars = parse_string_to_chars(date_string);
     let mut date = [0, 0, 0]; // an array to represent the day, month, and year.
     
-    let mut i = date_chars.len() - 1; //working backwards
-    let mut factor = 1; // You'll see...
-    let mut date_index = 2; //working backwards
+    let mut date_index = 0;
 
     let mut format_invalid = 0; //ensuring valid format
     for &elem in date_chars.iter() {
@@ -183,30 +181,32 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
             _        => 1
         };
     }
-    if format_invalid > 2 {
+    if (format_invalid > 2) {
         println!("Invalid!");
         return (0,0,0);
     }
-    
-    while i < date_chars.len() { //uints don't go negative
-        let date_scope_flag = match date_chars[i] {
+    let mut temp_array: ~[char] = ~[];
+    while (date_chars.len() > 0) { 
+        let date_scope_flag = match date_chars[0] {
             '0'..'9'=> false,
             _       => true
         };
-        if date_scope_flag == false {
-            let current_val: uint = match date_chars[i] {
-                '1' => 1, '2' => 2, '3' => 3, '4' => 4,
-                '5' => 5, '6' => 6, '7' => 7, '8' => 8,
-                '9' => 9, _   => 0
-            };
-            date[date_index] += factor * current_val;
-            factor *= 10;
+        if (date_scope_flag == false) {
+            temp_array.push(date_chars.shift());
         }
         else {
-            date_index -= 1;
-            factor = 1;
+            date[date_index] = match from_str::<uint>(parse_chars_to_string(temp_array.clone())) {
+                Some(num) => num,
+                _         => 0
+            };
+            temp_array = ~[];
+            if (date_chars.len() > 0) { date_chars.shift(); }
+            date_index += 1;
         }
-        i -= 1;
     }
+    date[2] = match from_str::<uint>(parse_chars_to_string(temp_array)) {
+        Some(num) => num,
+        _         => 0
+    };
     return (date[0], date[1], date[2]);
 }
