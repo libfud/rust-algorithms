@@ -192,6 +192,62 @@
 <span id='154'>154</span>
 <span id='155'>155</span>
 <span id='156'>156</span>
+<span id='157'>157</span>
+<span id='158'>158</span>
+<span id='159'>159</span>
+<span id='160'>160</span>
+<span id='161'>161</span>
+<span id='162'>162</span>
+<span id='163'>163</span>
+<span id='164'>164</span>
+<span id='165'>165</span>
+<span id='166'>166</span>
+<span id='167'>167</span>
+<span id='168'>168</span>
+<span id='169'>169</span>
+<span id='170'>170</span>
+<span id='171'>171</span>
+<span id='172'>172</span>
+<span id='173'>173</span>
+<span id='174'>174</span>
+<span id='175'>175</span>
+<span id='176'>176</span>
+<span id='177'>177</span>
+<span id='178'>178</span>
+<span id='179'>179</span>
+<span id='180'>180</span>
+<span id='181'>181</span>
+<span id='182'>182</span>
+<span id='183'>183</span>
+<span id='184'>184</span>
+<span id='185'>185</span>
+<span id='186'>186</span>
+<span id='187'>187</span>
+<span id='188'>188</span>
+<span id='189'>189</span>
+<span id='190'>190</span>
+<span id='191'>191</span>
+<span id='192'>192</span>
+<span id='193'>193</span>
+<span id='194'>194</span>
+<span id='195'>195</span>
+<span id='196'>196</span>
+<span id='197'>197</span>
+<span id='198'>198</span>
+<span id='199'>199</span>
+<span id='200'>200</span>
+<span id='201'>201</span>
+<span id='202'>202</span>
+<span id='203'>203</span>
+<span id='204'>204</span>
+<span id='205'>205</span>
+<span id='206'>206</span>
+<span id='207'>207</span>
+<span id='208'>208</span>
+<span id='209'>209</span>
+<span id='210'>210</span>
+<span id='211'>211</span>
+<span id='212'>212</span>
 </pre><pre class='rust'>//!  Commonly used functions 
 
 use std::io;
@@ -224,10 +280,19 @@ pub fn number_getter(question: &amp;str) -&gt; int {
     let number = string_getter(question);
     let num = from_str::&lt;int&gt;(number);
     match num {
-        Some(0) =&gt; return 0,
         Some(num) =&gt; return num,
         None =&gt; return 0
     }
+}
+
+/// Takes user input and returns a floating point number.
+pub fn float_getter(question: &amp;str) -&gt; f64 {
+    let number = string_getter(question);
+    let num = from_str::&lt;f64&gt;(number);
+    match num {
+        Some(num) =&gt; return num,
+        None      =&gt; return 0.0
+   }
 }
 
 /// Geneerates an array with the number of elements specified by size.
@@ -347,6 +412,53 @@ pub fn parse_chars_to_string(char_string: ~[char]) -&gt; ~str {
         string.push_char(elem);
     }
     return string;
+}
+
+/// Parses a string in date format into a tuple of three integers for
+/// day, month and year
+
+pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint) {
+    let date_string = string_orig.trim_left().to_owned();
+    let date_chars = parse_string_to_chars(date_string);
+    let mut date = [0, 0, 0]; // an array to represent the day, month, and year.
+    
+    let mut i = date_chars.len() - 1; //working backwards
+    let mut factor = 1; // You&#39;ll see...
+    let mut date_index = 2; //working backwards
+
+    let mut format_invalid = 0; //ensuring valid format
+    for &amp;elem in date_chars.iter() {
+        format_invalid += match elem {
+            &#39;0&#39;..&#39;9&#39; =&gt; 0,
+            _        =&gt; 1
+        };
+    }
+    if format_invalid &gt; 2 {
+        println!(&quot;Invalid!&quot;);
+        return (0,0,0);
+    }
+    
+    while i &lt; date_chars.len() { //uints don&#39;t go negative
+        let date_scope_flag = match date_chars[i] {
+            &#39;0&#39;..&#39;9&#39;=&gt; false,
+            _       =&gt; true
+        };
+        if date_scope_flag == false {
+            let current_val: uint = match date_chars[i] {
+                &#39;1&#39; =&gt; 1, &#39;2&#39; =&gt; 2, &#39;3&#39; =&gt; 3, &#39;4&#39; =&gt; 4,
+                &#39;5&#39; =&gt; 5, &#39;6&#39; =&gt; 6, &#39;7&#39; =&gt; 7, &#39;8&#39; =&gt; 8,
+                &#39;9&#39; =&gt; 9, _   =&gt; 0
+            };
+            date[date_index] += factor * current_val;
+            factor *= 10;
+        }
+        else {
+            date_index -= 1;
+            factor = 1;
+        }
+        i -= 1;
+    }
+    return (date[0], date[1], date[2]);
 }
 </pre></section>
     <section id='search' class="content hidden"></section>
