@@ -62,12 +62,51 @@
 <span id='24'>24</span>
 <span id='25'>25</span>
 <span id='26'>26</span>
+<span id='27'>27</span>
+<span id='28'>28</span>
+<span id='29'>29</span>
+<span id='30'>30</span>
+<span id='31'>31</span>
+<span id='32'>32</span>
+<span id='33'>33</span>
+<span id='34'>34</span>
+<span id='35'>35</span>
+<span id='36'>36</span>
+<span id='37'>37</span>
+<span id='38'>38</span>
+<span id='39'>39</span>
+<span id='40'>40</span>
+<span id='41'>41</span>
+<span id='42'>42</span>
+<span id='43'>43</span>
+<span id='44'>44</span>
+<span id='45'>45</span>
+<span id='46'>46</span>
+<span id='47'>47</span>
+<span id='48'>48</span>
+<span id='49'>49</span>
+<span id='50'>50</span>
+<span id='51'>51</span>
+<span id='52'>52</span>
+<span id='53'>53</span>
+<span id='54'>54</span>
+<span id='55'>55</span>
+<span id='56'>56</span>
+<span id='57'>57</span>
+<span id='58'>58</span>
+<span id='59'>59</span>
+<span id='60'>60</span>
+<span id='61'>61</span>
+<span id='62'>62</span>
+<span id='63'>63</span>
+<span id='64'>64</span>
+<span id='65'>65</span>
 </pre><pre class='rust'>#[crate_id = &quot;records&quot;];
 
 //! Gathers data for a complex number, a date and a person
 
-use common::records::{ Complex_Number, Date };
-use common::utils::{string_getter, float_getter, parse_date};
+use common::records::{ Complex_Number, Date, Person };
+use common::utils::{string_getter, float_getter, parse_date, answer_to_bool};
 
 pub mod common {
     pub mod records;
@@ -79,13 +118,52 @@ fn main() {
     let imaginary = float_getter(&quot;Input an imaginary number.&quot;);
     let z = Complex_Number{real_num: real, imag_num: imaginary};
     println!(&quot;{}, {}&quot;,z.real_num,z.imag_num);
-    println!(&quot;{}&quot;,real);
-    println!(&quot;{}&quot;, z.real_num);
 
     let date_string = string_getter(&quot;What is today&#39;s date?&quot;);
-    let (day1, month1, year1) = parse_date(date_string);
-    let date = Date {day: day1, month: month1, year: year1};
+    let (current_day, current_month, current_year) = parse_date(date_string);
+    let date = Date {day: current_day, month: current_month, year: current_year};
     println!(&quot;The date is {}/{}/{}&quot;,date.day,date.month,date.year);
+
+   
+    let last_name = string_getter(&quot;what is your last name?&quot;);
+    let given_name = string_getter(&quot;What is your first name?&quot;);
+    
+    let dob_string = string_getter(&quot;What is your birth date?&quot;);
+    let (dobday, dobmonth, dobyear) = parse_date(dob_string);
+    let dob = Date { day: dobday, month: dobmonth, year: dobyear };
+    
+    let mut sex_str = string_getter(&quot;Are you female? y/n&quot;);
+    let is_female = answer_to_bool(sex_str);
+    let mut married_str = string_getter(&quot;Are you married? y/n&quot;);
+    let is_married = answer_to_bool(married_str);
+    
+    let you = Person { family_name: last_name, first_name: given_name,
+        date_of_birth: dob, Is_Female: is_female, Is_Married: is_married };
+
+    sex_str = match you.Is_Female {
+        false =&gt; ~&quot;are&quot;,
+        _     =&gt; ~&quot;are not&quot;
+    };
+
+    married_str = match you.Is_Married {
+        true =&gt; ~&quot;are&quot;,
+        _    =&gt; ~&quot;are not&quot;
+    };
+
+    let mut age: uint = 0;
+
+    if you.date_of_birth.year &lt;  date.year {
+        age = date.year - you.date_of_birth.year;
+        if date.month == you.date_of_birth.month {
+            if date.day &gt; you.date_of_birth.day { age -= 1; }
+        }
+        else if date.month &lt; you.date_of_birth.month { age -= 1; }
+    }
+    
+    println!(&quot;Your name is {} {}. You were born on {}/{} in {}. You {} male. You {} married.&quot;,
+        you.first_name, you.family_name, you.date_of_birth.day, you.date_of_birth.month,
+        you.date_of_birth.year, sex_str, married_str);
+    println!(&quot;You are {} years old.&quot;, age);
 
 }
 </pre></section>
