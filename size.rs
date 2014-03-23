@@ -1,6 +1,11 @@
 #[crate_id = "size"];
 
-/// Turns a file with a list of file sizes into a total size
+//! Turns a file with a list of file sizes into a total size
+//! Expects a file that has the descriptions of the files split line by line.
+//! Allows paramaters from stdin. Without that input, it will prompt the user
+//! for a file. The user can specify whether or not to include a table showing
+//! the size of each file formatted to Megabytes. The total size can be shown
+//! in Kilobytes, Megabytes, or Gigabytes.
 
 use common::utils::{float_array_from_file, string_getter, answer_to_bool};
 use common::utils::parse_string_to_chars;
