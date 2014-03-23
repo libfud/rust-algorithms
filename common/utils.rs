@@ -1,4 +1,4 @@
-/* Commonly used functions */
+//!  Commonly used functions 
 
 use std::io;
 use std::io::File;

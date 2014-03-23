@@ -1,0 +1,1 @@
+var searchIndex = [{ty:"mod",name:"",path:"binary search",desc:""},{ty:"fn",name:"binary_search",path:"binary search",desc:"binary search implementation"}];var allPaths = {'0':{type:'mod',name:'binary search'},'5':{type:'fn',name:'binary_search'}};
