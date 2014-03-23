@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>records::common::utils::float_array_from_file - Rust</title>
+    <title>records::common::utils::parse_date - Rust</title>
 
     <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
           rel='stylesheet' type='text/css'>
@@ -21,7 +21,7 @@
     <section class="sidebar">
         
 
-        <p class='location'><a href='../../index.html'>records</a>&#8203;::<a href='../index.html'>common</a>&#8203;::<a href='index.html'>utils</a></p><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.answer_to_bool.html'>answer_to_bool</a><br/><a class='fn ' href='fn.array_from_file.html'>array_from_file</a><br/><a class='fn ' href='fn.array_gen.html'>array_gen</a><br/><a class='fn current' href='fn.float_array_from_file.html'>float_array_from_file</a><br/><a class='fn ' href='fn.float_getter.html'>float_getter</a><br/><a class='fn ' href='fn.int_array_from_file.html'>int_array_from_file</a><br/><a class='fn ' href='fn.number_getter.html'>number_getter</a><br/><a class='fn ' href='fn.parse_chars_to_string.html'>parse_chars_to_string</a><br/><a class='fn ' href='fn.parse_date.html'>parse_date</a><br/><a class='fn ' href='fn.parse_string_to_chars.html'>parse_string_to_chars</a><br/><a class='fn ' href='fn.parse_string_to_float.html'>parse_string_to_float</a><br/><a class='fn ' href='fn.string_getter.html'>string_getter</a><br/></div>
+        <p class='location'><a href='../../index.html'>records</a>&#8203;::<a href='../index.html'>common</a>&#8203;::<a href='index.html'>utils</a></p><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.answer_to_bool.html'>answer_to_bool</a><br/><a class='fn ' href='fn.array_from_file.html'>array_from_file</a><br/><a class='fn ' href='fn.array_gen.html'>array_gen</a><br/><a class='fn ' href='fn.float_array_from_file.html'>float_array_from_file</a><br/><a class='fn ' href='fn.float_getter.html'>float_getter</a><br/><a class='fn ' href='fn.int_array_from_file.html'>int_array_from_file</a><br/><a class='fn ' href='fn.number_getter.html'>number_getter</a><br/><a class='fn ' href='fn.parse_chars_to_string.html'>parse_chars_to_string</a><br/><a class='fn current' href='fn.parse_date.html'>parse_date</a><br/><a class='fn ' href='fn.parse_string_to_chars.html'>parse_string_to_chars</a><br/><a class='fn ' href='fn.parse_string_to_float.html'>parse_string_to_float</a><br/><a class='fn ' href='fn.string_getter.html'>string_getter</a><br/></div>
     </section>
 
     <nav class="sub">
@@ -37,9 +37,8 @@
     </nav>
 
     <section id='main' class="content fn"><a class='source'
-                       href='../../../src/records/common/utils.rs.html#99-113'>[src]</a><h1 class='fqn'>Function <a href='../../index.html'>records</a>::<a href='../index.html'>common</a>::<a href='index.html'>utils</a>::<a class='fn' href=''>float_array_from_file</a></h1><pre class='fn'>pub fn float_array_from_file(strpath: ~str) -&gt; (~[f64], ~[~str])</pre><div class='docblock'><p>Uses array_from_file and parse_string_to_chars and parse_string_to_float
-to return two vectors from a file: one of floating point numbers, and
-another of owned strings. </p>
+                       href='../../../src/records/common/utils.rs.html#170-212'>[src]</a><h1 class='fqn'>Function <a href='../../index.html'>records</a>::<a href='../index.html'>common</a>::<a href='index.html'>utils</a>::<a class='fn' href=''>parse_date</a></h1><pre class='fn'>pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint)</pre><div class='docblock'><p>Parses a string in date format into a tuple of three integers for
+day, month and year</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
