@@ -56,11 +56,18 @@
 <span id='18'>18</span>
 <span id='19'>19</span>
 <span id='20'>20</span>
+<span id='21'>21</span>
+<span id='22'>22</span>
+<span id='23'>23</span>
+<span id='24'>24</span>
+<span id='25'>25</span>
+<span id='26'>26</span>
 </pre><pre class='rust'>#[crate_id = &quot;records&quot;];
 
 //! Gathers data for a complex number, a date and a person
 
-use common::records::Complex_Number;
+use common::records::{ Complex_Number, Date };
+use common::utils::{string_getter, float_getter, parse_date};
 
 pub mod common {
     pub mod records;
@@ -68,13 +75,18 @@ pub mod common {
 }
 
 fn main() {
-    let mut real = common::utils::float_getter(&quot;Input a real number.&quot;);
-    let imaginary = common::utils::float_getter(&quot;Input an imaginary number.&quot;);
+    let real = float_getter(&quot;Input a real number.&quot;);
+    let imaginary = float_getter(&quot;Input an imaginary number.&quot;);
     let z = Complex_Number{real_num: real, imag_num: imaginary};
     println!(&quot;{}, {}&quot;,z.real_num,z.imag_num);
-    real = 7.5;
     println!(&quot;{}&quot;,real);
     println!(&quot;{}&quot;, z.real_num);
+
+    let date_string = string_getter(&quot;What is today&#39;s date?&quot;);
+    let (day1, month1, year1) = parse_date(date_string);
+    let date = Date {day: day1, month: month1, year: year1};
+    println!(&quot;The date is {}/{}/{}&quot;,date.day,date.month,date.year);
+
 }
 </pre></section>
     <section id='search' class="content hidden"></section>
