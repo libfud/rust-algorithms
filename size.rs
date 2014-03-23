@@ -1,4 +1,7 @@
-/*Turns a file with a list of file sizes into a total size */
+#[crate_id = "size"];
+#[crate_type="lib"];
+
+//!Turns a file with a list of file sizes into a total size
 
 use common::utils::{float_array_from_file, string_getter, answer_to_bool};
 use common::utils::parse_string_to_chars;
@@ -6,6 +9,7 @@ use common::utils::parse_string_to_chars;
 pub mod common { pub mod utils; }
 
 fn main() {
+    
     let args = std::os::args();
     let mut pathname: ~str;
     if args.len() > 1 {
