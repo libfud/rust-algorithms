@@ -1,4 +1,4 @@
-/*Merge function for merge sort */
+///Merge function for merge sort and merge_insertion sort.
 
 use std::vec;
 

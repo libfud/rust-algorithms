@@ -1,4 +1,4 @@
-/*Insertion sort as a function */
+/// Insertion sort as a function 
 
 pub fn ins_sort(array_clone: ~[int],array_size: int) -> ~[int] {
     let mut array = array_clone;

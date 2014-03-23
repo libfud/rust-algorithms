@@ -30,10 +30,19 @@ pub fn number_getter(question: &str) -> int {
     let number = string_getter(question);
     let num = from_str::<int>(number);
     match num {
-        Some(0) => return 0,
         Some(num) => return num,
         None => return 0
     }
+}
+
+/// Takes user input and returns a floating point number.
+pub fn float_getter(question: &str) -> f64 {
+    let number = string_getter(question);
+    let num = from_str::<f64>(number);
+    match num {
+        Some(num) => return num,
+        None      => return 0.0
+   }
 }
 
 /// Geneerates an array with the number of elements specified by size.
