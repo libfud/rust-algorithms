@@ -5,7 +5,7 @@ use std::io::File;
 use std::io::buffered::BufferedReader;
 use std::rand::{task_rng, Rng};
 
-//Takes a yes or no answer in string form and returns a boolean value.
+/// Takes a yes or no answer in string form and returns a boolean value.
 pub fn answer_to_bool(string_orig: ~str) -> bool {
     let string = string_orig;
     match string.trim_left() {
@@ -14,6 +14,7 @@ pub fn answer_to_bool(string_orig: ~str) -> bool {
     };
 }
 
+/// Returns a string in response to a question.
 pub fn string_getter(question: &str) -> ~str {
     println!("{}",question);
     let mut reader = BufferedReader::new(io::stdin());
@@ -24,6 +25,7 @@ pub fn string_getter(question: &str) -> ~str {
     return string;
 }
 
+/// Takes user input and returns an integer.
 pub fn number_getter(question: &str) -> int {
     let number = string_getter(question);
     let num = from_str::<int>(number);
@@ -34,6 +36,11 @@ pub fn number_getter(question: &str) -> int {
     }
 }
 
+/// Geneerates an array with the number of elements specified by size.
+/// Upper bound limits the size of the numbers generated to itself
+/// times the number of elements requested. For example, if you
+/// request 10 elements and specify an upper bound of 2, you will get
+/// 10 numbers ranging in size from 1 to 20.
 pub fn array_gen(size: int, upper_bound: int) -> ~[int] {
     println!("Generating {} random numbers", size);
     let mut array =  ~[];
@@ -47,6 +54,8 @@ pub fn array_gen(size: int, upper_bound: int) -> ~[int] {
     return array;
 }
 
+/// Facilitates getting data from files in the form of an array
+/// of strings, each string consisting of one line from the file.
 pub fn array_from_file(strpath: ~str) -> ~[~str] {
     let path = Path::new(strpath);
     let mut file = BufferedReader::new(File::open(&path));
@@ -55,6 +64,8 @@ pub fn array_from_file(strpath: ~str) -> ~[~str] {
     return lines
 }
 
+/// Uses array from file to return an array of integers. This
+/// needs some more work.
 pub fn int_array_from_file(strpath: ~str) -> ~[int] {
     let lines = array_from_file(strpath);
     let size = lines.len();
@@ -73,7 +84,9 @@ pub fn int_array_from_file(strpath: ~str) -> ~[int] {
     return array;
 }
 
-
+/// Uses array_from_file and parse_string_to_chars and parse_string_to_float
+/// to return two vectors from a file: one of floating point numbers, and
+/// another of owned strings. 
 pub fn float_array_from_file(strpath: ~str) -> (~[f64],~[~str]) {
     let lines = array_from_file(strpath);
     let size = lines.len();
@@ -90,6 +103,8 @@ pub fn float_array_from_file(strpath: ~str) -> (~[f64],~[~str]) {
     return (float_array, string_array);
 }
 
+/// Takes an owned string and returns a floating point numbger
+/// and an owned string, if possible.
 pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
     let string = string_orig.trim_left().to_owned();
     let mut float_chars = parse_string_to_chars(string);
@@ -122,6 +137,7 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
     return (float_number, rest_of_string);
 }
 
+/// Turns an owned string into a vector of chars.
 pub fn parse_string_to_chars(string: ~str) -> ~[char] {
     let mut char_string: ~[char] = ~[];
     for char_elem in string.chars() {
@@ -130,6 +146,7 @@ pub fn parse_string_to_chars(string: ~str) -> ~[char] {
     return char_string;
 }
 
+/// Turns an owned vector of chars into an owned string.
 pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
     let mut string: ~str = ~"";
     for &elem in char_string.iter() {
