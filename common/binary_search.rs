@@ -1,5 +1,3 @@
-#[crate_id = "binary search"];
-
 /// binary search implementation
 
 pub fn binary_search(array: ~[int], search_value: int, first_elem: int, last_elem: int) -> int {
