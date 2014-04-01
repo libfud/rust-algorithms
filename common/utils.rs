@@ -120,6 +120,7 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
     let mut float_string: ~str = ~"0";
     let mut decimal_flag = false;
     loop {
+        if float_chars.len() == 0 { break }
         let number_bool = match float_chars[0] {
             '0'..'9'|'.' => true,
             _ => false
@@ -158,8 +159,10 @@ pub fn parse_string_to_chars(string: ~str) -> ~[char] {
 /// Turns an owned vector of chars into an owned string.
 pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
     let mut string: ~str = ~"";
-    for &elem in char_string.iter() {
-        string.push_char(elem);
+    if char_string.len() > 0 {
+        for &elem in char_string.iter() {
+            string.push_char(elem);
+        }
     }
     return string;
 }
