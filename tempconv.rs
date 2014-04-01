@@ -40,7 +40,7 @@ fn main() {
             }
         }
         else {
-            println("use tempconv -h for help");
+            println("Fahrenheit or Celsius?");
             return;
         }
     }
