@@ -18,15 +18,16 @@ fn cels_to_fahr(cels: f64) -> f64 {
 
 fn main() {
     let args = std::os::args();
-    if args.len() < 3 { 
+    if args.len() < 2 { 
         println(":^o");
         return;
     }
 
-    let (temperature, scale) = parse_string_to_float(args[2].to_owned());
+    let (temperature, scale) = parse_string_to_float(args[1].to_owned());
 
-    match args[1].to_owned() {
-        ~"-f"|~"f" => println!("{}", fahr_to_cels(temperature)),
+    match scale.slice_to(1){
+        "F"|"f" => println!("{}C", fahr_to_cels(temperature)),
+        "C"|"c" => println!("{}F", cels_to_fahr(temperature)),
         _ => println("Woops")
     }
 }
