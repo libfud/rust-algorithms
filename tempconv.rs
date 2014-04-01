@@ -40,7 +40,7 @@ fn main() {
             }
         }
         else {
-            println("Fahrenheit or Celsius?");
+            println("I require you to specify fahrenheit or celsius.");
             return;
         }
     }
