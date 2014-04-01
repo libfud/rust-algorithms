@@ -248,6 +248,9 @@
 <span id='210'>210</span>
 <span id='211'>211</span>
 <span id='212'>212</span>
+<span id='213'>213</span>
+<span id='214'>214</span>
+<span id='215'>215</span>
 </pre><pre class='rust'>//!  Commonly used functions 
 
 use std::io;
@@ -370,6 +373,7 @@ pub fn parse_string_to_float(string_orig: ~str) -&gt; (f64, ~str) {
     let mut float_string: ~str = ~&quot;0&quot;;
     let mut decimal_flag = false;
     loop {
+        if float_chars.len() == 0 { break }
         let number_bool = match float_chars[0] {
             &#39;0&#39;..&#39;9&#39;|&#39;.&#39; =&gt; true,
             _ =&gt; false
@@ -408,8 +412,10 @@ pub fn parse_string_to_chars(string: ~str) -&gt; ~[char] {
 /// Turns an owned vector of chars into an owned string.
 pub fn parse_chars_to_string(char_string: ~[char]) -&gt; ~str {
     let mut string: ~str = ~&quot;&quot;;
-    for &amp;elem in char_string.iter() {
-        string.push_char(elem);
+    if char_string.len() &gt; 0 {
+        for &amp;elem in char_string.iter() {
+            string.push_char(elem);
+        }
     }
     return string;
 }
@@ -419,12 +425,10 @@ pub fn parse_chars_to_string(char_string: ~[char]) -&gt; ~str {
 
 pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint) {
     let date_string = string_orig.trim_left().to_owned();
-    let date_chars = parse_string_to_chars(date_string);
+    let mut date_chars = parse_string_to_chars(date_string);
     let mut date = [0, 0, 0]; // an array to represent the day, month, and year.
     
-    let mut i = date_chars.len() - 1; //working backwards
-    let mut factor = 1; // You&#39;ll see...
-    let mut date_index = 2; //working backwards
+    let mut date_index = 0;
 
     let mut format_invalid = 0; //ensuring valid format
     for &amp;elem in date_chars.iter() {
@@ -433,31 +437,33 @@ pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint) {
             _        =&gt; 1
         };
     }
-    if format_invalid &gt; 2 {
+    if (format_invalid &gt; 2) {
         println!(&quot;Invalid!&quot;);
         return (0,0,0);
     }
-    
-    while i &lt; date_chars.len() { //uints don&#39;t go negative
-        let date_scope_flag = match date_chars[i] {
+    let mut temp_array: ~[char] = ~[];
+    while (date_chars.len() &gt; 0) { 
+        let date_scope_flag = match date_chars[0] {
             &#39;0&#39;..&#39;9&#39;=&gt; false,
             _       =&gt; true
         };
-        if date_scope_flag == false {
-            let current_val: uint = match date_chars[i] {
-                &#39;1&#39; =&gt; 1, &#39;2&#39; =&gt; 2, &#39;3&#39; =&gt; 3, &#39;4&#39; =&gt; 4,
-                &#39;5&#39; =&gt; 5, &#39;6&#39; =&gt; 6, &#39;7&#39; =&gt; 7, &#39;8&#39; =&gt; 8,
-                &#39;9&#39; =&gt; 9, _   =&gt; 0
-            };
-            date[date_index] += factor * current_val;
-            factor *= 10;
+        if (date_scope_flag == false) {
+            temp_array.push(date_chars.shift());
         }
         else {
-            date_index -= 1;
-            factor = 1;
+            date[date_index] = match from_str::&lt;uint&gt;(parse_chars_to_string(temp_array.clone())) {
+                Some(num) =&gt; num,
+                _         =&gt; 0
+            };
+            temp_array = ~[];
+            if (date_chars.len() &gt; 0) { date_chars.shift(); }
+            date_index += 1;
         }
-        i -= 1;
     }
+    date[2] = match from_str::&lt;uint&gt;(parse_chars_to_string(temp_array)) {
+        Some(num) =&gt; num,
+        _         =&gt; 0
+    };
     return (date[0], date[1], date[2]);
 }
 </pre></section>

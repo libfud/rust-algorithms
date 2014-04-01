@@ -248,6 +248,9 @@
 <span id='210'>210</span>
 <span id='211'>211</span>
 <span id='212'>212</span>
+<span id='213'>213</span>
+<span id='214'>214</span>
+<span id='215'>215</span>
 </pre><pre class='rust'>//!  Commonly used functions 
 
 use std::io;
@@ -370,6 +373,7 @@ pub fn parse_string_to_float(string_orig: ~str) -&gt; (f64, ~str) {
     let mut float_string: ~str = ~&quot;0&quot;;
     let mut decimal_flag = false;
     loop {
+        if float_chars.len() == 0 { break }
         let number_bool = match float_chars[0] {
             &#39;0&#39;..&#39;9&#39;|&#39;.&#39; =&gt; true,
             _ =&gt; false
@@ -408,8 +412,10 @@ pub fn parse_string_to_chars(string: ~str) -&gt; ~[char] {
 /// Turns an owned vector of chars into an owned string.
 pub fn parse_chars_to_string(char_string: ~[char]) -&gt; ~str {
     let mut string: ~str = ~&quot;&quot;;
-    for &amp;elem in char_string.iter() {
-        string.push_char(elem);
+    if char_string.len() &gt; 0 {
+        for &amp;elem in char_string.iter() {
+            string.push_char(elem);
+        }
     }
     return string;
 }
