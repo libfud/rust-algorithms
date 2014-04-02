@@ -9,34 +9,37 @@ use common::utils::parse_string_to_chars;
 pub mod common { pub mod utils; }
 
 
-///Iterates through an array of strings to see if a key
-/// is in any of the strings. On each iteration, the 
-/// string is converted to an array of chars and then
-/// another loop compares the first char in the array
-/// to the first char in the key. If they do not match,
-/// the first element from the string is shifted. 
-fn find_string(key: ~str, data: ~[~str]) -> bool {
+///find_string takes an owned string for a key and an array of owned strings
+/// as the text to be searched, and returns the string's index in the array, 
+/// and the array of string at which the first instantiation of the key was
+/// found.
+fn find_string(key: ~str, data: ~[~str]) -> (uint, int) {
     
     let keychars = parse_string_to_chars(key);
     let mut i = 0;
     let mut found = false;
+    let mut index: int = 0;  //int rather than uint so -1 can show not found
 
     loop {
-        if i >= data.len() { break }
+        if i >= data.len() { break } //don't try OOB access
         let mut datastring = parse_string_to_chars(data[i].to_owned());
+        index = 0;
         loop {
-            if keychars.len() > datastring.len() { break }
+            if keychars.len() > datastring.len() { break } //they key can't
+                //be in something shorter than itself
             if keychars[0] == datastring[0] {
                 found = compare_chars(keychars.clone(), datastring.clone());
             }
             if found == true { break }
-            else { datastring.shift(); }
+            datastring.shift();
+            index += 1; //to locate where the key starts in the string
         }
         if found == true { break }
         i += 1;
     }
 
-    return found;
+    if found == false { index = -1 }
+    return (i, index);
 }
 
 /// Compares two arrays of characters. They do not have to be of equal
@@ -44,10 +47,11 @@ fn find_string(key: ~str, data: ~[~str]) -> bool {
 /// it will return false.
 fn compare_chars(stringa: ~[char], stringb: ~[char]) -> bool {
     let mut i = 0;
-    let mut found = true;
+    let mut found = true; //assume true til proven false
     
     loop {
-        if stringb.len() < stringa.len() {
+        if stringb.len() < stringa.len() { //a key can't be in something shorter
+            //than itself
             found = false;
             break;
         }
@@ -80,8 +84,13 @@ fn main() {
     let searchstring = searcharray[0].slice_to(searcharray[0].len() - 1).to_owned();
     //FIXME -- Okay, I still need to work with IO in rust. This is an ugly kludge.
 
-    match find_string(searchstring, textarray) {
-        true  => println("Found it."),
-        false => println("Did not find it.")
+    let (textindex, stringindex) = find_string(searchstring, textarray);
+    if stringindex < 0 { 
+        println("Not found.");
+        return;
     }
+    else {
+        println!("{} {}", textindex, stringindex);
+    }
+    
 }
