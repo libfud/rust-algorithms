@@ -7,9 +7,9 @@ pub mod common { pub mod utils; }
 
 ///Creates an array with elements that are from the fibonacci
 /// sequence. Takes an argument for how many elements to generate.
-fn fib ( nth_elem: uint ) -> ~[f64] {
+fn fib ( nth_elem: uint ) -> ~[u64] {
     assert!(nth_elem >= 2);
-    let mut array = ~[0.0, 1.0];
+    let mut array = ~[0, 1];
     let mut current_elem = 2;       //the third element 
     while current_elem <= nth_elem {
         array.push(array[current_elem - 2] + array[current_elem - 1]);
@@ -31,6 +31,10 @@ fn main() {
         };
     } else {
         println!("Generating {} numbers in the fibonacci sequence.",nth_elem);
+    }
+    if nth_elem > 93 {
+        println!("{} is too big, using 93.",nth_elem);
+        nth_elem = 93;
     }
 
     let array = fib(nth_elem);
