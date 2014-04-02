@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>merge_sort::common::utils - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../../merge_sort/main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+
+        <p class='location'><a href='../../index.html'>merge_sort</a>&#8203;::<a href='../index.html'>common</a></p><div class='block mod'><h2>Modules</h2><a class='mod current' href='../utils/index.html'>utils</a><br/></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <button class="do-search">Search</button>
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Search documentation..."
+                       type="search" />
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod"><a class='source'
+                       href='../../../src/merge_sort/merge.rs.html#8'>[src]</a><h1 class='fqn'>Module <a href='../../index.html'>merge_sort</a>::<a href='../index.html'>common</a>::<a class='mod' href=''>utils</a></h1><div class='docblock'><p>Commonly used functions</p>
+</div><h2>Functions</h2>
+<table>
+                    <tr>
+                        <td><a class='fn' href='fn.answer_to_bool.html'
+                               title='merge_sort::common::utils::answer_to_bool'>answer_to_bool</a></td>
+                        <td class='docblock short'><p>Takes a yes or no answer in string form and returns a boolean value.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.array_from_file.html'
+                               title='merge_sort::common::utils::array_from_file'>array_from_file</a></td>
+                        <td class='docblock short'><p>Facilitates getting data from files in the form of an array
+of strings, each string consisting of one line from the file.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.array_gen.html'
+                               title='merge_sort::common::utils::array_gen'>array_gen</a></td>
+                        <td class='docblock short'><p>Geneerates an array with the number of elements specified by size.
+Upper bound limits the size of the numbers generated to itself
+times the number of elements requested. For example, if you
+request 10 elements and specify an upper bound of 2, you will get
+10 numbers ranging in size from 1 to 20.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.float_array_from_file.html'
+                               title='merge_sort::common::utils::float_array_from_file'>float_array_from_file</a></td>
+                        <td class='docblock short'><p>Uses array_from_file and parse_string_to_chars and parse_string_to_float
+to return two vectors from a file: one of floating point numbers, and
+another of owned strings. </p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.float_getter.html'
+                               title='merge_sort::common::utils::float_getter'>float_getter</a></td>
+                        <td class='docblock short'><p>Takes user input and returns a floating point number.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.int_array_from_file.html'
+                               title='merge_sort::common::utils::int_array_from_file'>int_array_from_file</a></td>
+                        <td class='docblock short'><p>Uses array from file to return an array of integers. This
+needs some more work.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.number_getter.html'
+                               title='merge_sort::common::utils::number_getter'>number_getter</a></td>
+                        <td class='docblock short'><p>Takes user input and returns an integer.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.parse_chars_to_string.html'
+                               title='merge_sort::common::utils::parse_chars_to_string'>parse_chars_to_string</a></td>
+                        <td class='docblock short'><p>Turns an owned vector of chars into an owned string.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.parse_date.html'
+                               title='merge_sort::common::utils::parse_date'>parse_date</a></td>
+                        <td class='docblock short'><p>Parses a string in date format into a tuple of three integers for
+day, month and year</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.parse_string_to_chars.html'
+                               title='merge_sort::common::utils::parse_string_to_chars'>parse_string_to_chars</a></td>
+                        <td class='docblock short'><p>Turns an owned string into a vector of chars.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.parse_string_to_float.html'
+                               title='merge_sort::common::utils::parse_string_to_float'>parse_string_to_float</a></td>
+                        <td class='docblock short'><p>Takes an owned string and returns a floating point numbger
+and an owned string, if possible.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.string_getter.html'
+                               title='merge_sort::common::utils::string_getter'>string_getter</a></td>
+                        <td class='docblock short'><p>Returns a string in response to a question.</p>
+</td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <script>
+        var rootPath = "../../../";
+    </script>
+    <script src="../../../merge_sort/jquery.js"></script>
+    <script src="../../../merge_sort/search-index.js"></script>
+    <script src="../../../merge_sort/main.js"></script>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&uarr;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&darr;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+</body>
+</html>

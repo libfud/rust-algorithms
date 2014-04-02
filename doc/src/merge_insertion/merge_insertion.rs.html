@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>merge_insertion.rs.html -- source</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../merge_insertion/main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+
+        
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <button class="do-search">Search</button>
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Search documentation..."
+                       type="search" />
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content source"><pre class='line-numbers'><span id='1'> 1</span>
+<span id='2'> 2</span>
+<span id='3'> 3</span>
+<span id='4'> 4</span>
+<span id='5'> 5</span>
+<span id='6'> 6</span>
+<span id='7'> 7</span>
+<span id='8'> 8</span>
+<span id='9'> 9</span>
+<span id='10'>10</span>
+<span id='11'>11</span>
+<span id='12'>12</span>
+<span id='13'>13</span>
+<span id='14'>14</span>
+<span id='15'>15</span>
+<span id='16'>16</span>
+<span id='17'>17</span>
+<span id='18'>18</span>
+<span id='19'>19</span>
+<span id='20'>20</span>
+<span id='21'>21</span>
+<span id='22'>22</span>
+<span id='23'>23</span>
+<span id='24'>24</span>
+<span id='25'>25</span>
+<span id='26'>26</span>
+<span id='27'>27</span>
+<span id='28'>28</span>
+<span id='29'>29</span>
+<span id='30'>30</span>
+<span id='31'>31</span>
+<span id='32'>32</span>
+<span id='33'>33</span>
+<span id='34'>34</span>
+<span id='35'>35</span>
+<span id='36'>36</span>
+<span id='37'>37</span>
+<span id='38'>38</span>
+<span id='39'>39</span>
+<span id='40'>40</span>
+<span id='41'>41</span>
+<span id='42'>42</span>
+<span id='43'>43</span>
+<span id='44'>44</span>
+<span id='45'>45</span>
+<span id='46'>46</span>
+<span id='47'>47</span>
+<span id='48'>48</span>
+<span id='49'>49</span>
+<span id='50'>50</span>
+<span id='51'>51</span>
+<span id='52'>52</span>
+<span id='53'>53</span>
+<span id='54'>54</span>
+<span id='55'>55</span>
+<span id='56'>56</span>
+<span id='57'>57</span>
+<span id='58'>58</span>
+<span id='59'>59</span>
+<span id='60'>60</span>
+<span id='61'>61</span>
+</pre><pre class='rust'>#[crate_id = &quot;merge_insertion&quot;];
+#[crate_type = &quot;bin&quot;];
+
+//! Merge sort with insertion sort.
+
+use std::num::from_uint;
+
+pub mod common {
+    pub mod utils;
+    pub mod insertion;
+    pub mod merge;
+}
+
+fn merge_ins_sort(array: ~[int], min_size: int) -&gt; ~[int] {
+//! Takes an array of integers and recursively splits it until it holds
+//! the number of elements specified by minimum size. At that point, each
+//! array is sorted by insertion sort, and then merged.
+
+   let length = match from_uint::&lt;int&gt;(array.len()) {
+        Some(num) =&gt; num,
+        None =&gt; 1
+    };
+    if length &lt;= min_size {
+        return common::insertion::ins_sort(array.clone(),length);
+    }
+
+    let middle = array.len() /2 ;
+    let mut left = array.slice(0, middle).to_owned();
+    let mut right = array.slice(middle, array.len()).to_owned();
+
+    left = merge_ins_sort(left, min_size);
+    right = merge_ins_sort(right, min_size);
+
+    common::merge::merge(left, right)
+}
+
+
+fn main() {
+//!Requests a minimum size of the subarray for insertion sort, and the name of the
+//!file holding the unsorted values.
+    let args = std::os::args();
+    let mut min_size = 20; // magic numbers woo (this is a default size)
+    
+    if args.len() &lt; 2 {
+        println(&quot;I need a filename.&quot;);
+        return;
+    }
+    if args.len() &gt; 2 {
+        min_size = match from_str::&lt;int&gt;(args[2].to_owned()) {
+            Some(num) =&gt; num,
+            _         =&gt; 20
+        }
+    }
+    println!(&quot;Using {} as the minimum length for the arrays.&quot;,min_size);
+    let pathname = args[1].to_owned();
+    let array = common::utils::int_array_from_file(pathname);
+    let sorted_array = merge_ins_sort(array.clone(),min_size);
+    for &amp;elem in sorted_array.iter() {
+        println!(&quot;{}&quot;,elem);
+    }
+}
+</pre></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <script>
+        var rootPath = "../../";
+    </script>
+    <script src="../../merge_insertion/jquery.js"></script>
+    <script src="../../merge_insertion/search-index.js"></script>
+    <script src="../../merge_insertion/main.js"></script>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&uarr;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&darr;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+</body>
+</html>

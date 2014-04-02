@@ -1,9 +1,9 @@
 #[crate_id = "merge_insertion"];
+#[crate_type = "bin"];
 
 //! Merge sort with insertion sort.
 
 use std::num::from_uint;
-use common::utils::{string_getter, number_getter};
 
 pub mod common {
     pub mod utils;
@@ -38,8 +38,21 @@ fn merge_ins_sort(array: ~[int], min_size: int) -> ~[int] {
 fn main() {
 //!Requests a minimum size of the subarray for insertion sort, and the name of the
 //!file holding the unsorted values.
-    let min_size = number_getter("What is the minimum size of the subarrays?");
-    let pathname = string_getter("What is the name of the file with unsorted values?");
+    let args = std::os::args();
+    let mut min_size = 20; // magic numbers woo (this is a default size)
+    
+    if args.len() < 2 {
+        println("I need a filename.");
+        return;
+    }
+    if args.len() > 2 {
+        min_size = match from_str::<int>(args[2].to_owned()) {
+            Some(num) => num,
+            _         => 20
+        }
+    }
+    println!("Using {} as the minimum length for the arrays.",min_size);
+    let pathname = args[1].to_owned();
     let array = common::utils::int_array_from_file(pathname);
     let sorted_array = merge_ins_sort(array.clone(),min_size);
     for &elem in sorted_array.iter() {
