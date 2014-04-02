@@ -1,8 +1,13 @@
-/*Returns the nth element of the fibonacci sequence.*/
+#[crate_id = "fibonacci"];
+#[crate_type = "bin"];
+
+//! Returns the nth element of the fibonacci sequence.
 
 pub mod common { pub mod utils; }
 
-fn fib ( nth_elem: int ) -> ~[f64] {
+///Creates an array with elements that are from the fibonacci
+/// sequence. Takes an argument for how many elements to generate.
+fn fib ( nth_elem: uint ) -> ~[f64] {
     assert!(nth_elem >= 2);
     let mut array = ~[0.0, 1.0];
     let mut current_elem = 2;       //the third element 
@@ -14,15 +19,21 @@ fn fib ( nth_elem: int ) -> ~[f64] {
 }
 
 fn main() {
-    let mut nth_elem: int;
-    loop {
-        nth_elem = common::utils::number_getter("Input the desired number of the fibonacci sequence");
-        if nth_elem >= 2 { break }
+    
+    let args = std::os::args();
+
+    let mut nth_elem: uint = 10; //Dummy for no arguments.
+    
+    if args.len() > 1 {
+        nth_elem = match from_str::<uint>(args[1].to_owned()) {
+            Some(num) => num,
+            _         => 10
+        };
+    } else {
+        println!("Generating {} numbers in the fibonacci sequence.",nth_elem);
     }
+
     let array = fib(nth_elem);
     let fib_nth = array[nth_elem];
-    let fib_penult = array[nth_elem-1];
     println!("The {}th number in the fibonacci sequence is {}.",nth_elem,fib_nth);
-    println!("{} / {} = {}, and {} / {} = {}.",fib_nth,fib_penult,fib_nth/fib_penult,
-        fib_penult,fib_nth,fib_penult/fib_nth);
 }
