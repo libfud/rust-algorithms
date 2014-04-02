@@ -1,19 +1,23 @@
-/* selection sort */
+#[crate_id = "selection"];
+#[crate_type = "bin"];
+
+//!Selection sort implementation.
 
 pub mod common { pub mod utils; }
 
 fn main() {
-    let x = 100000;
-    let pathname = ~"common/numbers.txt";
-    let mut array = common::utils::array_from_file(pathname,x);
-    for &elem in array.iter(){
-        println!("{}",elem);
-    } // To see how they look unsorted.
+    let args = std::os::args();
+    if args.len() < 2 {
+        println("I need a filename.");
+        return;
+    }
+    let pathname = args[1].to_owned();
+    let mut array = common::utils::int_array_from_file(pathname);
     let mut i = 0;
-    while i < (x-1) {  // The outer loop will iterate through each element in the array.
+    while i < (array.len() -1) {  // The outer loop will iterate through each element in the array.
         let mut j = i; //j will be used for the inner loop
         let mut Min_index = j; //Min_index will be the index of the smallest number
-        while j < x-1 {
+        while j < array.len() -1 {
             j += 1;
             if array[j] < array[Min_index] { Min_index = j; } 
              //gotta ensure that you find the smallest number and update the index.
@@ -26,7 +30,6 @@ fn main() {
         }
         i+=1;
     }
-    println!("\n\n\nThe sorted numbers:");
     for &elem in array.iter(){
         println!("{}",elem);
     }
