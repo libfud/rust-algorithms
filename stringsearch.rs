@@ -1,7 +1,7 @@
-#[crate_id = "stringsearch"];
+#[crate_id = "naive_stringsearch"];
 #[crate_type = "bin"];
 
-//! An implimentation of a straight string search.
+//! An implimentation of a naive string search.
 
 use common::utils::array_from_file;
 use common::utils::parse_string_to_chars;
