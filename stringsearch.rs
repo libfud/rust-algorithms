@@ -11,7 +11,7 @@ pub mod common { pub mod utils; }
 
 ///find_string takes an owned string for a key and an array of owned strings
 /// as the text to be searched, and returns the string's index in the array, 
-/// and the array of string at which the first instantiation of the key was
+/// and the index of string at which the first instantiation of the key was
 /// found.
 fn find_string(key: ~str, data: ~[~str]) -> (uint, int) {
     
