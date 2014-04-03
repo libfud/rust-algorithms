@@ -1,9 +1,8 @@
 //!  Commonly used functions 
 
+extern crate rand;
 use std::io;
-use std::io::File;
-use std::io::buffered::BufferedReader;
-use std::rand::{task_rng, Rng};
+use std::io::{File, BufferedReader, Open, Read};
 
 /// Takes a yes or no answer in string form and returns a boolean value.
 pub fn answer_to_bool(string_orig: ~str) -> bool {
@@ -17,11 +16,9 @@ pub fn answer_to_bool(string_orig: ~str) -> bool {
 /// Returns a string in response to a question.
 pub fn string_getter(question: &str) -> ~str {
     println!("{}",question);
-    let mut reader = BufferedReader::new(io::stdin());
-    let mut string = reader.read_line().unwrap_or(~"No");
-    string = string.slice_to(string.len() - 1).trim_left().to_owned();
+    let mut reader = io::stdin();
+    let mut string = reader.read_line().ok().unwrap_or(~"invalid");
     if string == ~"" { string = ~"is invalid" }
-    println!("You input {}",string);
     return string;
 }
 
@@ -45,37 +42,41 @@ pub fn float_getter(question: &str) -> f64 {
    }
 }
 
-/// Geneerates an array with the number of elements specified by size.
+/// Generates an array with the number of elements specified by size.
 /// Upper bound limits the size of the numbers generated to itself
 /// times the number of elements requested. For example, if you
 /// request 10 elements and specify an upper bound of 2, you will get
 /// 10 numbers ranging in size from 1 to 20.
-pub fn array_gen(size: int, upper_bound: int) -> ~[int] {
-    println!("Generating {} random numbers", size);
-    let mut array =  ~[];
-    let mut i = 0;
-    while i <= size {
-        let mut rng = task_rng();
-        let y: int = rng.gen_range(1,upper_bound*size);
-        array.push(y);
-        i += 1;
-    }
-    return array;
-}
+/*pub fn array_gen(size: uint, upper_bound: uint) -> Vec<int> {
+    let range = Range::new(1, size * upper_bound);
+    let mut rng = task_rng();
+
+    range(0, size).map(|_| range.ind_sample(&mut rng)).collect()
+}*/
 
 /// Facilitates getting data from files in the form of an array
 /// of strings, each string consisting of one line from the file.
-pub fn array_from_file(strpath: ~str) -> ~[~str] {
+pub fn array_from_file(strpath: &str) -> ~[~str] {
     let path = Path::new(strpath);
-    let mut file = BufferedReader::new(File::open(&path));
-    let lines: ~[~str] = file.lines().collect();
-    
-    return lines
+    let mut lines: ~[~str] = ~[];
+
+    let file = match File::open_mode(&path, Open, Read) {
+        Ok(f) => f,
+        Err(e) => fail!("file error: {}", e),
+    };
+
+    let mut reader = BufferedReader::new(file);
+
+    for aline in reader.lines() {
+        lines.push(aline.unwrap());
+    }
+
+    return lines;
 }
 
 /// Uses array from file to return an array of integers. This
 /// needs some more work.
-pub fn int_array_from_file(strpath: ~str) -> ~[int] {
+pub fn int_array_from_file(strpath: &str) -> ~[int] {
     let lines = array_from_file(strpath);
     let size = lines.len();
     let mut i = 0;
@@ -96,7 +97,7 @@ pub fn int_array_from_file(strpath: ~str) -> ~[int] {
 /// Uses array_from_file and parse_string_to_chars and parse_string_to_float
 /// to return two vectors from a file: one of floating point numbers, and
 /// another of owned strings. 
-pub fn float_array_from_file(strpath: ~str) -> (~[f64],~[~str]) {
+pub fn float_array_from_file(strpath: &str) -> (~[f64],~[~str]) {
     let lines = array_from_file(strpath);
     let size = lines.len();
     let mut i = 0;
@@ -184,18 +185,22 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
             _        => 1
         };
     }
-    if (format_invalid > 2) {
+    if format_invalid > 2 {
         println!("Invalid!");
         return (0,0,0);
     }
     let mut temp_array: ~[char] = ~[];
-    while (date_chars.len() > 0) { 
+    while date_chars.len() > 0 { 
         let date_scope_flag = match date_chars[0] {
             '0'..'9'=> false,
             _       => true
         };
-        if (date_scope_flag == false) {
-            temp_array.push(date_chars.shift());
+        if date_scope_flag == false {
+            let temp_date_char = match date_chars.shift() {
+                Some(c) => c,
+                _       => '0',
+            };
+            temp_array.push(temp_date_char);
         }
         else {
             date[date_index] = match from_str::<uint>(parse_chars_to_string(temp_array.clone())) {
@@ -203,7 +208,7 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
                 _         => 0
             };
             temp_array = ~[];
-            if (date_chars.len() > 0) { date_chars.shift(); }
+            if date_chars.len() > 0 { date_chars.shift(); }
             date_index += 1;
         }
     }
