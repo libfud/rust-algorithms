@@ -1,4 +1,4 @@
-#[crate_id = "size"];
+#![crate_id = "size"]
 
 //! Turns a file with a list of file sizes into a total size
 //! Expects a file that has the descriptions of the files split line by line.
@@ -13,7 +13,7 @@ use common::utils::parse_string_to_chars;
 pub mod common { pub mod utils; }
 
 fn main() {
-    
+        
     let args = std::os::args();
     let mut pathname: ~str;
     if args.len() > 1 {
@@ -43,34 +43,31 @@ fn main() {
             'M' => array[i],
             'G' => array[i]*1000.0,
             _   => array[i] //I could take out the M case, but I think it
-            //preserves intentions by leaving it in, if I add other cases.
+                            //preserves intentions by leaving it in, if I add other cases.
         };
         total += file_size;
         i+=1;
     }
     i = 0;
-    
+
     let mut answer = string_getter("Would you like to print a table of the sizes of the files? : y/N");
     let print_tables = answer_to_bool(answer);
     if print_tables {
-        while i < array_size - 6 {
-            print!("{},\t\t{},\t\t{},\t\t",array[i],array[i+1],array[i+2]);
-            println!("{},\t\t{},\t\t{}",array[i+3],array[i+4],array[i+5]);
-            i+=6;
+    while i < array_size - 6 {
+        print!("{},\t\t{},\t\t{},\t\t",array[i],array[i+1],array[i+2]);
+        println!("{},\t\t{},\t\t{}",array[i+3],array[i+4],array[i+5]);
+        i+=6;
+    }
+    i -= 6;
+    while i < array_size {
+        print!("{}\t",array[i]);
+        i+=1;
         }
-        i -= 6;
-        while i < array_size {
-            print!("{}\t",array[i]);
-            i+=1;
-        }
-        println("");
+        println!("");
     }
     answer = string_getter("How do you want the size formatted? Default iS Megabytes. : K/M/G");
-    total = match answer {
-        ~"K" => total*1000.0,
-        ~"M" => total,
-        ~"G" => total/1000.0,
-        _    => total
-    };
+    if answer == ~"K" { total*=1000.0 }
+    else if answer == ~"G" { total/=1000.0 }
     println!("{}",total);
 }
+

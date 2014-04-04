@@ -22,9 +22,11 @@ fn main() {
     }
     assert!(i == n);
 
-    while i > 0 {
-        y = array[i-1] + x * y;
-        i -= 1;
+    let mut j: uint = i as uint;
+
+    while j > 0 {
+        y = array[j-1] + x * y;
+        j -= 1;
     }
 
     println!("y = {}", y);

@@ -1,5 +1,5 @@
-#[crate_id = "fibonacci"];
-#[crate_type = "bin"];
+#![crate_id = "fibonacci"]
+#![crate_type = "bin"]
 
 //! Returns the nth element of the fibonacci sequence.
 

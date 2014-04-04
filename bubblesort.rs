@@ -1,5 +1,5 @@
-#[crate_id = "bubblesort"];
-#[crate_type = "bin"];
+#![crate_id = "bubblesort"]
+#![crate_type = "bin"]
 
 //!An implementation of bubblesort.
 
@@ -28,7 +28,7 @@ fn main() {
     
     let args = std::os::args();
     if args.len() < 2 {
-        println("I need a filename.");
+        println!("I need a filename.");
         return;
     }
 

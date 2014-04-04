@@ -30,11 +30,11 @@ fn main() {
     loop {
         x = common::utils::number_getter("What is the number to decompose?");
         if x > 3 { break }
-        else { println("2 and 3 are prime numbers, dummy."); }
+        else { println!("2 and 3 are prime numbers, dummy."); }
     }
     let factor_array = decomp(x);
     for &elem in factor_array.iter() {
         print!("{}  ",elem);
     }
-    println("");
+    println!("");
 }

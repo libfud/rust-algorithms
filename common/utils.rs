@@ -1,12 +1,14 @@
 //!  Commonly used functions 
 
 extern crate rand;
+use self::rand::task_rng;
+use self::rand::distributions::{Range, IndependentSample};
 use std::io;
 use std::io::{File, BufferedReader, Open, Read};
 
 /// Takes a yes or no answer in string form and returns a boolean value.
-pub fn answer_to_bool(string_orig: ~str) -> bool {
-    let string = string_orig;
+pub fn answer_to_bool(string_orig: &str) -> bool {
+    let string = string_orig.slice_to(1);
     match string.trim_left() {
         "y" | "Y" => return true,
         _ => return false
@@ -18,18 +20,9 @@ pub fn string_getter(question: &str) -> ~str {
     println!("{}",question);
     let mut reader = io::stdin();
     let mut string = reader.read_line().ok().unwrap_or(~"invalid");
+    string = string.slice_to(string.len() -1).to_owned();
     if string == ~"" { string = ~"is invalid" }
     return string;
-}
-
-/// Takes user input and returns an integer.
-pub fn number_getter(question: &str) -> int {
-    let number = string_getter(question);
-    let num = from_str::<int>(number);
-    match num {
-        Some(num) => return num,
-        None => return 0
-    }
 }
 
 /// Takes user input and returns a floating point number.
@@ -47,12 +40,18 @@ pub fn float_getter(question: &str) -> f64 {
 /// times the number of elements requested. For example, if you
 /// request 10 elements and specify an upper bound of 2, you will get
 /// 10 numbers ranging in size from 1 to 20.
-/*pub fn array_gen(size: uint, upper_bound: uint) -> Vec<int> {
+pub fn array_gen(size: uint, upper_bound: uint) -> ~[uint] {
     let range = Range::new(1, size * upper_bound);
     let mut rng = task_rng();
+    let mut array: ~[uint] = ~[];
+    let mut i = 0;
+    while i < size {
+        array.push(range.ind_sample(&mut rng));
+        i += 1;
+    }
 
-    range(0, size).map(|_| range.ind_sample(&mut rng)).collect()
-}*/
+    return array;
+}
 
 /// Facilitates getting data from files in the form of an array
 /// of strings, each string consisting of one line from the file.
