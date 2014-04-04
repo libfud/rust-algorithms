@@ -1,5 +1,5 @@
-#[crate_id = "naive_stringsearch"];
-#[crate_type = "bin"];
+#![crate_id = "naive_stringsearch"]
+#![crate_type = "bin"]
 
 //! An implimentation of a naive string search.
 
@@ -70,9 +70,9 @@ fn main() {
     let args = std::os::args();
     
     if args.len() < 3 {
-        println("You must input at least two files; one of the text to be"+
-        " searched, and one holding the search string, in that order."+
-        "\nFor example, ./searchstring texts/this.txt texts/that.txt");
+        print!("You must input at least two files; one of the text to be");
+        println!(" searched, and one holding the search string, in that order.");
+        println!("For example, ./searchstring texts/this.txt texts/that.txt");
         return;
     }
 
@@ -86,7 +86,7 @@ fn main() {
 
     let (textindex, stringindex) = find_string(searchstring, textarray);
     if stringindex < 0 { 
-        println("Not found.");
+        println!("Not found.");
         return;
     }
     else {
