@@ -1,5 +1,7 @@
 /* Decomposes a number into its prime factors.*/
 
+use common::utils::string_getter;
+
 pub mod common { pub mod utils; }
 
 fn decomp(x_orig: int) -> ~[int] {
@@ -28,7 +30,11 @@ fn decomp(x_orig: int) -> ~[int] {
 fn main() {
     let mut x: int;
     loop {
-        x = common::utils::number_getter("What is the number to decompose?");
+        x = match from_str::<int>(string_getter("What is the number to "+
+        "decompose?")) {
+            Some(num) => num,
+            _         => 0,
+        };
         if x > 3 { break }
         else { println!("2 and 3 are prime numbers, dummy."); }
     }

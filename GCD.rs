@@ -1,3 +1,5 @@
+use common::utils::string_getter;
+
 pub mod common { pub mod utils; }
 
 fn GCD(x: int, y: int) -> int {
@@ -17,12 +19,19 @@ fn GCD(x: int, y: int) -> int {
 fn main() {
     let (mut x, mut y): (int, int);
     loop {
-        x = common::utils::number_getter("What is the value of the first number?");
+        x = match from_str::<int>(string_getter("What is the value of the first"
+        +" number?")) {
+            Some(num) => num,
+            _         => 0,
+        };
         if x > 1 { break }
         else { println!("No, a number greater than 1."); }
     } 
     loop {
-        y = common::utils::number_getter("What is the value of the next number?");
+        y = match from_str::<int>(string_getter("What is the next number?")) {
+            Some(num) => num,
+            _         => 0,
+        };
         if y > 1 { break }
         else { println!("No, give me something greater than 1."); }
    }
