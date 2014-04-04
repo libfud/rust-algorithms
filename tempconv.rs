@@ -1,5 +1,5 @@
-#[crate_id = "tempconv"];
-#[crate_type = "bin"];
+#![crate_id = "tempconv"]
+#![crate_type = "bin"]
 
 //! Converts decimal integers or floating point numbers of either fahrenheit
 //! or celsius to celsius or fahrenheit, respectively.
@@ -13,7 +13,7 @@ fn fahr_to_cels(fahr: f64) -> f64 {
 }
 
 fn cels_to_fahr(cels: f64) -> f64 {
-    return cels * 5.0 / 9.0 + 32.0;
+    return ((cels * 9.0 / 5.0) + 32.0);
 }
 
 fn main() {
@@ -36,13 +36,13 @@ fn main() {
             match scale.slice_to(1){
                 "F"|"f" => println!("{}C", fahr_to_cels(temperature)),
                 "C"|"c" => println!("{}F", cels_to_fahr(temperature)),
-                _ => println("use tempconv -h for help")
+                _ => println!("use tempconv -h for help")
             }
         }
         else {
-            println("I require you to specify fahrenheit or celsius.");
+            println!("I require you to specify fahrenheit or celsius.");
             return;
         }
     }
-    else { println("use tempconv -h for help") }
+    else { println!("use tempconv -h for help") }
 }
