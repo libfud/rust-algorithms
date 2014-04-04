@@ -4,7 +4,6 @@
 //! An implimentation of a naive string search.
 
 use common::utils::array_from_file;
-use common::utils::parse_string_to_chars;
 
 pub mod common { pub mod utils; }
 
@@ -13,16 +12,15 @@ pub mod common { pub mod utils; }
 /// as the text to be searched, and returns the string's index in the array, 
 /// and the index of string at which the first instantiation of the key was
 /// found.
-fn find_string(key: ~str, data: ~[~str]) -> (uint, int) {
+fn find_string(keychars: ~str, data: ~[~str]) -> (uint, int) {
     
-    let keychars = parse_string_to_chars(key);
     let mut i = 0;
     let mut found = false;
     let mut index: int = 0;  //int rather than uint so -1 can show not found
 
     loop {
         if i >= data.len() { break } //don't try OOB access
-        let mut datastring = parse_string_to_chars(data[i].to_owned());
+        let mut datastring = data[i].clone();
         index = 0;
         loop {
             if keychars.len() > datastring.len() { break } //they key can't
@@ -31,7 +29,7 @@ fn find_string(key: ~str, data: ~[~str]) -> (uint, int) {
                 found = compare_chars(keychars.clone(), datastring.clone());
             }
             if found == true { break }
-            datastring.shift();
+            datastring.shift_char();
             index += 1; //to locate where the key starts in the string
         }
         if found == true { break }
@@ -45,7 +43,7 @@ fn find_string(key: ~str, data: ~[~str]) -> (uint, int) {
 /// Compares two arrays of characters. They do not have to be of equal
 /// length. However, if the second string is shorter than the first 
 /// it will return false.
-fn compare_chars(stringa: ~[char], stringb: ~[char]) -> bool {
+fn compare_chars(stringa: ~str, stringb: ~str) -> bool {
     let mut i = 0;
     let mut found = true; //assume true til proven false
     
@@ -84,7 +82,7 @@ fn main() {
     let searchstring = searcharray[0].slice_to(searcharray[0].len() - 1).to_owned();
     //FIXME -- Okay, I still need to work with IO in rust. This is an ugly kludge.
 
-    let (textindex, stringindex) = find_string(searchstring, textarray);
+    let (textindex, stringindex) = find_string(searchstring, textarray.clone());
     if stringindex < 0 { 
         println!("Not found.");
         return;
