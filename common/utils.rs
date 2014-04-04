@@ -93,6 +93,19 @@ pub fn int_array_from_file(strpath: &str) -> ~[int] {
     return array;
 }
 
+pub fn uint_array_from_file(strpath: &str) -> ~[uint] {
+    let lines = array_from_file(strpath);
+    let mut array: ~[uint] = ~[];
+    for elem in lines.iter() {
+        let number = match from_str::<uint>(elem.slice_to(elem.len() - 1)) {
+            Some(num) => num,
+            None      => 0,
+        };
+        array.push(number)
+    }
+    return array;
+}
+
 /// Uses array_from_file and parse_string_to_chars and parse_string_to_float
 /// to return two vectors from a file: one of floating point numbers, and
 /// another of owned strings. 
@@ -148,7 +161,7 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
 }
 
 /// Turns an owned string into a vector of chars.
-pub fn parse_string_to_chars(string: ~str) -> ~[char] {
+pub fn parse_string_to_chars(string: &str) -> ~[char] {
     let mut char_string: ~[char] = ~[];
     for char_elem in string.chars() {
         char_string.push(char_elem);
