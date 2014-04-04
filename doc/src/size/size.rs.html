@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <title>size.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../size/main.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
 </head>
@@ -109,96 +109,85 @@
 <span id='71'>71</span>
 <span id='72'>72</span>
 <span id='73'>73</span>
-<span id='74'>74</span>
-<span id='75'>75</span>
-<span id='76'>76</span>
-</pre><pre class='rust'>#[crate_id = &quot;size&quot;];
+</pre><pre class='rust '>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_id</span> <span class='op'>=</span> <span class='string'>&quot;size&quot;</span>]</span>
 
-//! Turns a file with a list of file sizes into a total size
-//! Expects a file that has the descriptions of the files split line by line.
-//! Allows paramaters from stdin. Without that input, it will prompt the user
-//! for a file. The user can specify whether or not to include a table showing
-//! the size of each file formatted to Megabytes. The total size can be shown
-//! in Kilobytes, Megabytes, or Gigabytes.
+<span class='doccomment'>//! Turns a file with a list of file sizes into a total size
+</span><span class='doccomment'>//! Expects a file that has the descriptions of the files split line by line.
+</span><span class='doccomment'>//! Allows paramaters from stdin. Without that input, it will prompt the user
+</span><span class='doccomment'>//! for a file. The user can specify whether or not to include a table showing
+</span><span class='doccomment'>//! the size of each file formatted to Megabytes. The total size can be shown
+</span><span class='doccomment'>//! in Kilobytes, Megabytes, or Gigabytes.
+</span>
+<span class='kw'>use</span> <span class='ident'>common</span>::<span class='ident'>utils</span>::{<span class='ident'>float_array_from_file</span>, <span class='ident'>string_getter</span>, <span class='ident'>answer_to_bool</span>};
+<span class='kw'>use</span> <span class='ident'>common</span>::<span class='ident'>utils</span>::<span class='ident'>parse_string_to_chars</span>;
 
-use common::utils::{float_array_from_file, string_getter, answer_to_bool};
-use common::utils::parse_string_to_chars;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>common</span> { <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>utils</span>; }
 
-pub mod common { pub mod utils; }
-
-fn main() {
-    
-    let args = std::os::args();
-    let mut pathname: ~str;
-    if args.len() &gt; 1 {
-        pathname = args[1];
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+        
+    <span class='kw'>let</span> <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>args</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>pathname</span>: <span class='kw-2'>~</span><span class='ident'>str</span>;
+    <span class='kw'>if</span> <span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> {
+        <span class='ident'>pathname</span> <span class='op'>=</span> <span class='ident'>args</span>[<span class='number'>1</span>];
     }
-    else {
-        pathname = string_getter(&quot;What is the name of the file?&quot;);
+    <span class='kw'>else</span> {
+        <span class='ident'>pathname</span> <span class='op'>=</span> <span class='ident'>string_getter</span>(<span class='string'>&quot;What is the name of the file?&quot;</span>);
     }
-    let (array, block_size_array)  = float_array_from_file(pathname);
+    <span class='kw'>let</span> (<span class='ident'>array</span>, <span class='ident'>block_size_array</span>)  <span class='op'>=</span> <span class='ident'>float_array_from_file</span>(<span class='ident'>pathname</span>);<span class='comment'>
     // The function float_array_from_file uses parse_string_to_float, which
     // when used as intended splits a string into a floating point number and
     // the remainder of the string. Since we&#39;re using this on a file which lists
     // files using different sizes (KB, MB, GB...) We&#39;ll need the rest of the
     // string to determine what size each file listed is
-    let array_size = array.len();
-    let mut total: f64 = 0.0;
-    let mut i = 0;
+    </span><span class='kw'>let</span> <span class='ident'>array_size</span> <span class='op'>=</span> <span class='ident'>array</span>.<span class='ident'>len</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>total</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='number'>0.0</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
     
-    while i &lt; array_size {
-        let block_size = parse_string_to_chars(block_size_array[i].clone());
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>array_size</span> {
+        <span class='kw'>let</span> <span class='ident'>block_size</span> <span class='op'>=</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>block_size_array</span>[<span class='ident'>i</span>].<span class='ident'>clone</span>());<span class='comment'>
         /*String manipulation in rust is kind of a chore, so I prefer to
         convert strings to char arrays when doing in this kind of thing.
         This is not very efficient and rather lazy on my part, until I
         figure out a proper method of doing this. */
-        let file_size = match block_size[0] {
-            &#39;K&#39; =&gt; array[i]/1000.0,
-            &#39;M&#39; =&gt; array[i],
-            &#39;G&#39; =&gt; array[i]*1000.0,
-            _   =&gt; array[i] //I could take out the M case, but I think it
-            //preserves intentions by leaving it in, if I add other cases.
-        };
-        total += file_size;
-        i+=1;
+        </span><span class='kw'>let</span> <span class='ident'>file_size</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>block_size</span>[<span class='number'>0</span>] {
+            <span class='string'>&#39;K&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>array</span>[<span class='ident'>i</span>]<span class='op'>/</span><span class='number'>1000.0</span>,
+            <span class='string'>&#39;M&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>array</span>[<span class='ident'>i</span>],
+            <span class='string'>&#39;G&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>array</span>[<span class='ident'>i</span>]<span class='op'>*</span><span class='number'>1000.0</span>,
+            _   <span class='op'>=&gt;</span> <span class='ident'>array</span>[<span class='ident'>i</span>]<span class='comment'> //I could take out the M case, but I think it
+                            //preserves intentions by leaving it in, if I add other cases.
+        </span>};
+        <span class='ident'>total</span> <span class='op'>+=</span> <span class='ident'>file_size</span>;
+        <span class='ident'>i</span><span class='op'>+=</span><span class='number'>1</span>;
     }
-    i = 0;
-    
-    let mut answer = string_getter(&quot;Would you like to print a table of the sizes of the files? : y/N&quot;);
-    let print_tables = answer_to_bool(answer);
-    if print_tables {
-        while i &lt; array_size - 6 {
-            print!(&quot;{},\t\t{},\t\t{},\t\t&quot;,array[i],array[i+1],array[i+2]);
-            println!(&quot;{},\t\t{},\t\t{}&quot;,array[i+3],array[i+4],array[i+5]);
-            i+=6;
-        }
-        i -= 6;
-        while i &lt; array_size {
-            print!(&quot;{}\t&quot;,array[i]);
-            i+=1;
-        }
-        println(&quot;&quot;);
+    <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>answer</span> <span class='op'>=</span> <span class='ident'>string_getter</span>(<span class='string'>&quot;Would you like to print a table of the sizes of the files? : y/N&quot;</span>);
+    <span class='kw'>let</span> <span class='ident'>print_tables</span> <span class='op'>=</span> <span class='ident'>answer_to_bool</span>(<span class='ident'>answer</span>);
+    <span class='kw'>if</span> <span class='ident'>print_tables</span> {
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>array_size</span> <span class='op'>-</span> <span class='number'>6</span> {
+        <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{},\t\t{},\t\t{},\t\t&quot;</span>,<span class='ident'>array</span>[<span class='ident'>i</span>],<span class='ident'>array</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>1</span>],<span class='ident'>array</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>2</span>]);
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{},\t\t{},\t\t{}&quot;</span>,<span class='ident'>array</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>3</span>],<span class='ident'>array</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>4</span>],<span class='ident'>array</span>[<span class='ident'>i</span><span class='op'>+</span><span class='number'>5</span>]);
+        <span class='ident'>i</span><span class='op'>+=</span><span class='number'>6</span>;
     }
-    answer = string_getter(&quot;How do you want the size formatted? Default iS Megabytes. : K/M/G&quot;);
-    total = match answer {
-        ~&quot;K&quot; =&gt; total*1000.0,
-        ~&quot;M&quot; =&gt; total,
-        ~&quot;G&quot; =&gt; total/1000.0,
-        _    =&gt; total
-    };
-    println!(&quot;{}&quot;,total);
+    <span class='ident'>i</span> <span class='op'>-=</span> <span class='number'>6</span>;
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>array_size</span> {
+        <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}\t&quot;</span>,<span class='ident'>array</span>[<span class='ident'>i</span>]);
+        <span class='ident'>i</span><span class='op'>+=</span><span class='number'>1</span>;
+        }
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;&quot;</span>);
+    }
+    <span class='ident'>answer</span> <span class='op'>=</span> <span class='ident'>string_getter</span>(<span class='string'>&quot;How do you want the size formatted? Default iS Megabytes. : K/M/G&quot;</span>);
+    <span class='kw'>if</span> <span class='ident'>answer</span> <span class='op'>==</span> <span class='kw-2'>~</span><span class='string'>&quot;K&quot;</span> { <span class='ident'>total</span><span class='op'>*=</span><span class='number'>1000.0</span> }
+    <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>answer</span> <span class='op'>==</span> <span class='kw-2'>~</span><span class='string'>&quot;G&quot;</span> { <span class='ident'>total</span><span class='op'>/=</span><span class='number'>1000.0</span> }
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>,<span class='ident'>total</span>);
 }
-</pre></section>
+
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../";
-    </script>
-    <script src="../../size/jquery.js"></script>
-    <script src="../../size/search-index.js"></script>
-    <script src="../../size/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -230,5 +219,13 @@ fn main() {
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../";
+        var currentCrate = "size";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>

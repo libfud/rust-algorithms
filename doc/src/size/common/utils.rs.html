@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <title>utils.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../../size/main.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
 
     
 </head>
@@ -251,232 +251,235 @@
 <span id='213'>213</span>
 <span id='214'>214</span>
 <span id='215'>215</span>
-</pre><pre class='rust'>//!  Commonly used functions 
+<span id='216'>216</span>
+<span id='217'>217</span>
+<span id='218'>218</span>
+<span id='219'>219</span>
+</pre><pre class='rust '>
+<span class='doccomment'>//!  Commonly used functions 
+</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rand</span>::<span class='ident'>task_rng</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rand</span>::<span class='ident'>distributions</span>::{<span class='ident'>Range</span>, <span class='ident'>IndependentSample</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>File</span>, <span class='ident'>BufferedReader</span>, <span class='ident'>Open</span>, <span class='ident'>Read</span>};
 
-use std::io;
-use std::io::File;
-use std::io::buffered::BufferedReader;
-use std::rand::{task_rng, Rng};
-
-/// Takes a yes or no answer in string form and returns a boolean value.
-pub fn answer_to_bool(string_orig: ~str) -&gt; bool {
-    let string = string_orig;
-    match string.trim_left() {
-        &quot;y&quot; | &quot;Y&quot; =&gt; return true,
-        _ =&gt; return false
+<span class='doccomment'>/// Takes a yes or no answer in string form and returns a boolean value.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>answer_to_bool</span>(<span class='ident'>string_orig</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>string_orig</span>.<span class='ident'>slice_to</span>(<span class='number'>1</span>);
+    <span class='kw'>match</span> <span class='ident'>string</span>.<span class='ident'>trim_left</span>() {
+        <span class='string'>&quot;y&quot;</span> <span class='op'>|</span> <span class='string'>&quot;Y&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='boolval'>true</span>,
+        _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='boolval'>false</span>
     };
 }
 
-/// Returns a string in response to a question.
-pub fn string_getter(question: &amp;str) -&gt; ~str {
-    println!(&quot;{}&quot;,question);
-    let mut reader = BufferedReader::new(io::stdin());
-    let mut string = reader.read_line().unwrap_or(~&quot;No&quot;);
-    string = string.slice_to(string.len() - 1).trim_left().to_owned();
-    if string == ~&quot;&quot; { string = ~&quot;is invalid&quot; }
-    println!(&quot;You input {}&quot;,string);
-    return string;
+<span class='doccomment'>/// Returns a string in response to a question.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>string_getter</span>(<span class='ident'>question</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>~</span><span class='ident'>str</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>,<span class='ident'>question</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>reader</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>stdin</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>reader</span>.<span class='ident'>read_line</span>().<span class='ident'>ok</span>().<span class='ident'>unwrap_or</span>(<span class='kw-2'>~</span><span class='string'>&quot;invalid&quot;</span>);
+    <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>string</span>.<span class='ident'>slice_to</span>(<span class='ident'>string</span>.<span class='ident'>len</span>() <span class='op'>-</span><span class='number'>1</span>).<span class='ident'>to_owned</span>();
+    <span class='kw'>if</span> <span class='ident'>string</span> <span class='op'>==</span> <span class='kw-2'>~</span><span class='string'>&quot;&quot;</span> { <span class='ident'>string</span> <span class='op'>=</span> <span class='kw-2'>~</span><span class='string'>&quot;is invalid&quot;</span> }
+    <span class='kw'>return</span> <span class='ident'>string</span>;
 }
 
-/// Takes user input and returns an integer.
-pub fn number_getter(question: &amp;str) -&gt; int {
-    let number = string_getter(question);
-    let num = from_str::&lt;int&gt;(number);
-    match num {
-        Some(num) =&gt; return num,
-        None =&gt; return 0
-    }
-}
-
-/// Takes user input and returns a floating point number.
-pub fn float_getter(question: &amp;str) -&gt; f64 {
-    let number = string_getter(question);
-    let num = from_str::&lt;f64&gt;(number);
-    match num {
-        Some(num) =&gt; return num,
-        None      =&gt; return 0.0
+<span class='doccomment'>/// Takes user input and returns a floating point number.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>float_getter</span>(<span class='ident'>question</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+    <span class='kw'>let</span> <span class='ident'>number</span> <span class='op'>=</span> <span class='ident'>string_getter</span>(<span class='ident'>question</span>);
+    <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>(<span class='ident'>number</span>);
+    <span class='kw'>match</span> <span class='ident'>num</span> {
+        <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>num</span>,
+        <span class='prelude-val'>None</span>      <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='number'>0.0</span>
    }
 }
 
-/// Geneerates an array with the number of elements specified by size.
-/// Upper bound limits the size of the numbers generated to itself
-/// times the number of elements requested. For example, if you
-/// request 10 elements and specify an upper bound of 2, you will get
-/// 10 numbers ranging in size from 1 to 20.
-pub fn array_gen(size: int, upper_bound: int) -&gt; ~[int] {
-    println!(&quot;Generating {} random numbers&quot;, size);
-    let mut array =  ~[];
-    let mut i = 0;
-    while i &lt;= size {
-        let mut rng = task_rng();
-        let y: int = rng.gen_range(1,upper_bound*size);
-        array.push(y);
-        i += 1;
+<span class='doccomment'>/// Generates an array with the number of elements specified by size.
+</span><span class='doccomment'>/// Upper bound limits the size of the numbers generated to itself
+</span><span class='doccomment'>/// times the number of elements requested. For example, if you
+</span><span class='doccomment'>/// request 10 elements and specify an upper bound of 2, you will get
+</span><span class='doccomment'>/// 10 numbers ranging in size from 1 to 20.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>array_gen</span>(<span class='ident'>size</span>: <span class='ident'>uint</span>, <span class='ident'>upper_bound</span>: <span class='ident'>uint</span>) <span class='op'>-&gt;</span> <span class='kw-2'>~</span>[<span class='ident'>uint</span>] {
+    <span class='kw'>let</span> <span class='ident'>range</span> <span class='op'>=</span> <span class='ident'>Range</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='ident'>size</span> <span class='op'>*</span> <span class='ident'>upper_bound</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rng</span> <span class='op'>=</span> <span class='ident'>task_rng</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>array</span>: <span class='kw-2'>~</span>[<span class='ident'>uint</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>size</span> {
+        <span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>range</span>.<span class='ident'>ind_sample</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>rng</span>));
+        <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
     }
-    return array;
+
+    <span class='kw'>return</span> <span class='ident'>array</span>;
 }
 
-/// Facilitates getting data from files in the form of an array
-/// of strings, each string consisting of one line from the file.
-pub fn array_from_file(strpath: ~str) -&gt; ~[~str] {
-    let path = Path::new(strpath);
-    let mut file = BufferedReader::new(File::open(&amp;path));
-    let lines: ~[~str] = file.lines().collect();
-    
-    return lines
+<span class='doccomment'>/// Facilitates getting data from files in the form of an array
+</span><span class='doccomment'>/// of strings, each string consisting of one line from the file.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>array_from_file</span>(<span class='ident'>strpath</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>~</span>[<span class='kw-2'>~</span><span class='ident'>str</span>] {
+    <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='ident'>strpath</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>lines</span>: <span class='kw-2'>~</span>[<span class='kw-2'>~</span><span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+
+    <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>File</span>::<span class='ident'>open_mode</span>(<span class='kw-2'>&amp;</span><span class='ident'>path</span>, <span class='ident'>Open</span>, <span class='ident'>Read</span>) {
+        <span class='prelude-val'>Ok</span>(<span class='ident'>f</span>) <span class='op'>=&gt;</span> <span class='ident'>f</span>,
+        <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>fail</span><span class='macro'>!</span>(<span class='string'>&quot;file error: {}&quot;</span>, <span class='ident'>e</span>),
+    };
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>reader</span> <span class='op'>=</span> <span class='ident'>BufferedReader</span>::<span class='ident'>new</span>(<span class='ident'>file</span>);
+
+    <span class='kw'>for</span> <span class='ident'>aline</span> <span class='kw'>in</span> <span class='ident'>reader</span>.<span class='ident'>lines</span>() {
+        <span class='ident'>lines</span>.<span class='ident'>push</span>(<span class='ident'>aline</span>.<span class='ident'>unwrap</span>());
+    }
+
+    <span class='kw'>return</span> <span class='ident'>lines</span>;
 }
 
-/// Uses array from file to return an array of integers. This
-/// needs some more work.
-pub fn int_array_from_file(strpath: ~str) -&gt; ~[int] {
-    let lines = array_from_file(strpath);
-    let size = lines.len();
-    let mut i = 0;
-    let mut array: ~[int] = ~[];
-    while i &lt; size {
-        let numstr = &amp;lines[i];
-        let num = from_str::&lt;int&gt;(numstr.slice_to(numstr.len() - 1));
-        let number: int = match num {
-            Some(num) =&gt; num,
-            None =&gt; 0
+<span class='doccomment'>/// Uses array from file to return an array of integers. This
+</span><span class='doccomment'>/// needs some more work.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>int_array_from_file</span>(<span class='ident'>strpath</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>~</span>[<span class='ident'>int</span>] {
+    <span class='kw'>let</span> <span class='ident'>lines</span> <span class='op'>=</span> <span class='ident'>array_from_file</span>(<span class='ident'>strpath</span>);
+    <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>lines</span>.<span class='ident'>len</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>array</span>: <span class='kw-2'>~</span>[<span class='ident'>int</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>size</span> {
+        <span class='kw'>let</span> <span class='ident'>numstr</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>lines</span>[<span class='ident'>i</span>];
+        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>int</span><span class='op'>&gt;</span>(<span class='ident'>numstr</span>.<span class='ident'>slice_to</span>(<span class='ident'>numstr</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>));
+        <span class='kw'>let</span> <span class='ident'>number</span>: <span class='ident'>int</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>num</span> {
+            <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='number'>0</span>
         };
-        array.push(number);
-        i+=1;
+        <span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>number</span>);
+        <span class='ident'>i</span><span class='op'>+=</span><span class='number'>1</span>;
     }
-    return array;
+    <span class='kw'>return</span> <span class='ident'>array</span>;
 }
 
-/// Uses array_from_file and parse_string_to_chars and parse_string_to_float
-/// to return two vectors from a file: one of floating point numbers, and
-/// another of owned strings. 
-pub fn float_array_from_file(strpath: ~str) -&gt; (~[f64],~[~str]) {
-    let lines = array_from_file(strpath);
-    let size = lines.len();
-    let mut i = 0;
-    let mut float_array: ~[f64] = ~[];
-    let mut string_array: ~[~str] = ~[];
-    while i &lt; size {
-        let numstr = lines[i].trim_left().to_owned();
-        let (number, rest_of_string) = parse_string_to_float(numstr);
-        float_array.push(number);
-        string_array.push(rest_of_string);
-        i+=1;
+<span class='doccomment'>/// Uses array_from_file and parse_string_to_chars and parse_string_to_float
+</span><span class='doccomment'>/// to return two vectors from a file: one of floating point numbers, and
+</span><span class='doccomment'>/// another of owned strings. 
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>float_array_from_file</span>(<span class='ident'>strpath</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='kw-2'>~</span>[<span class='ident'>f64</span>],<span class='kw-2'>~</span>[<span class='kw-2'>~</span><span class='ident'>str</span>]) {
+    <span class='kw'>let</span> <span class='ident'>lines</span> <span class='op'>=</span> <span class='ident'>array_from_file</span>(<span class='ident'>strpath</span>);
+    <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>lines</span>.<span class='ident'>len</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_array</span>: <span class='kw-2'>~</span>[<span class='ident'>f64</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string_array</span>: <span class='kw-2'>~</span>[<span class='kw-2'>~</span><span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>size</span> {
+        <span class='kw'>let</span> <span class='ident'>numstr</span> <span class='op'>=</span> <span class='ident'>lines</span>[<span class='ident'>i</span>].<span class='ident'>trim_left</span>().<span class='ident'>to_owned</span>();
+        <span class='kw'>let</span> (<span class='ident'>number</span>, <span class='ident'>rest_of_string</span>) <span class='op'>=</span> <span class='ident'>parse_string_to_float</span>(<span class='ident'>numstr</span>);
+        <span class='ident'>float_array</span>.<span class='ident'>push</span>(<span class='ident'>number</span>);
+        <span class='ident'>string_array</span>.<span class='ident'>push</span>(<span class='ident'>rest_of_string</span>);
+        <span class='ident'>i</span><span class='op'>+=</span><span class='number'>1</span>;
     }
-    return (float_array, string_array);
+    <span class='kw'>return</span> (<span class='ident'>float_array</span>, <span class='ident'>string_array</span>);
 }
 
-/// Takes an owned string and returns a floating point numbger
-/// and an owned string, if possible.
-pub fn parse_string_to_float(string_orig: ~str) -&gt; (f64, ~str) {
-    let string = string_orig.trim_left().to_owned();
-    let mut float_chars = parse_string_to_chars(string);
-    let mut float_string: ~str = ~&quot;0&quot;;
-    let mut decimal_flag = false;
-    loop {
-        if float_chars.len() == 0 { break }
-        let number_bool = match float_chars[0] {
-            &#39;0&#39;..&#39;9&#39;|&#39;.&#39; =&gt; true,
-            _ =&gt; false
+<span class='doccomment'>/// Takes an owned string and returns a floating point numbger
+</span><span class='doccomment'>/// and an owned string, if possible.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_string_to_float</span>(<span class='ident'>string_orig</span>: <span class='kw-2'>~</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='kw-2'>~</span><span class='ident'>str</span>) {
+    <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>string_orig</span>.<span class='ident'>trim_left</span>().<span class='ident'>to_owned</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_chars</span> <span class='op'>=</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>string</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_string</span>: <span class='kw-2'>~</span><span class='ident'>str</span> <span class='op'>=</span> <span class='kw-2'>~</span><span class='string'>&quot;0&quot;</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decimal_flag</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+    <span class='kw'>loop</span> {
+        <span class='kw'>if</span> <span class='ident'>float_chars</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>break</span> }
+        <span class='kw'>let</span> <span class='ident'>number_bool</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>float_chars</span>[<span class='number'>0</span>] {
+            <span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span><span class='op'>|</span><span class='string'>&#39;.&#39;</span> <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='boolval'>false</span>
         };
-        if  float_chars[0] == &#39;.&#39; {
-            if decimal_flag == false {
-                decimal_flag = true;
-                float_string.push_char(float_chars[0]);
-                float_chars.shift();
+        <span class='kw'>if</span>  <span class='ident'>float_chars</span>[<span class='number'>0</span>] <span class='op'>==</span> <span class='string'>&#39;.&#39;</span> {
+            <span class='kw'>if</span> <span class='ident'>decimal_flag</span> <span class='op'>==</span> <span class='boolval'>false</span> {
+                <span class='ident'>decimal_flag</span> <span class='op'>=</span> <span class='boolval'>true</span>;
+                <span class='ident'>float_string</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
+                <span class='ident'>float_chars</span>.<span class='ident'>shift</span>();
             }
-            else { break }
+            <span class='kw'>else</span> { <span class='kw'>break</span> }
         }
-        else if number_bool == true {
-            float_string.push_char(float_chars[0]);
-            float_chars.shift();
+        <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>number_bool</span> <span class='op'>==</span> <span class='boolval'>true</span> {
+            <span class='ident'>float_string</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
+            <span class='ident'>float_chars</span>.<span class='ident'>shift</span>();
         }
-        else { break }
+        <span class='kw'>else</span> { <span class='kw'>break</span> }
     }
-    let float_number = match from_str::&lt;f64&gt;(float_string) {
-        Some(num) =&gt; num,
-        None =&gt; 0.0
+    <span class='kw'>let</span> <span class='ident'>float_number</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>(<span class='ident'>float_string</span>) {
+        <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='number'>0.0</span>
     };
-    let rest_of_string = parse_chars_to_string(float_chars);
-    return (float_number, rest_of_string);
+    <span class='kw'>let</span> <span class='ident'>rest_of_string</span> <span class='op'>=</span> <span class='ident'>parse_chars_to_string</span>(<span class='ident'>float_chars</span>);
+    <span class='kw'>return</span> (<span class='ident'>float_number</span>, <span class='ident'>rest_of_string</span>);
 }
 
-/// Turns an owned string into a vector of chars.
-pub fn parse_string_to_chars(string: ~str) -&gt; ~[char] {
-    let mut char_string: ~[char] = ~[];
-    for char_elem in string.chars() {
-        char_string.push(char_elem);
+<span class='doccomment'>/// Turns an owned string into a vector of chars.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>string</span>: <span class='kw-2'>~</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw-2'>~</span>[<span class='ident'>char</span>] {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>char_string</span>: <span class='kw-2'>~</span>[<span class='ident'>char</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>for</span> <span class='ident'>char_elem</span> <span class='kw'>in</span> <span class='ident'>string</span>.<span class='ident'>chars</span>() {
+        <span class='ident'>char_string</span>.<span class='ident'>push</span>(<span class='ident'>char_elem</span>);
     }
-    return char_string;
+    <span class='kw'>return</span> <span class='ident'>char_string</span>;
 }
 
-/// Turns an owned vector of chars into an owned string.
-pub fn parse_chars_to_string(char_string: ~[char]) -&gt; ~str {
-    let mut string: ~str = ~&quot;&quot;;
-    if char_string.len() &gt; 0 {
-        for &amp;elem in char_string.iter() {
-            string.push_char(elem);
+<span class='doccomment'>/// Turns an owned vector of chars into an owned string.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_chars_to_string</span>(<span class='ident'>char_string</span>: <span class='kw-2'>~</span>[<span class='ident'>char</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>~</span><span class='ident'>str</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span>: <span class='kw-2'>~</span><span class='ident'>str</span> <span class='op'>=</span> <span class='kw-2'>~</span><span class='string'>&quot;&quot;</span>;
+    <span class='kw'>if</span> <span class='ident'>char_string</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
+        <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>char_string</span>.<span class='ident'>iter</span>() {
+            <span class='ident'>string</span>.<span class='ident'>push_char</span>(<span class='ident'>elem</span>);
         }
     }
-    return string;
+    <span class='kw'>return</span> <span class='ident'>string</span>;
 }
 
-/// Parses a string in date format into a tuple of three integers for
-/// day, month and year
-
-pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint) {
-    let date_string = string_orig.trim_left().to_owned();
-    let mut date_chars = parse_string_to_chars(date_string);
-    let mut date = [0, 0, 0]; // an array to represent the day, month, and year.
+<span class='doccomment'>/// Parses a string in date format into a tuple of three integers for
+</span><span class='doccomment'>/// day, month and year
+</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_date</span>(<span class='ident'>string_orig</span>: <span class='kw-2'>~</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='ident'>uint</span>, <span class='ident'>uint</span>, <span class='ident'>uint</span>) {
+    <span class='kw'>let</span> <span class='ident'>date_string</span> <span class='op'>=</span> <span class='ident'>string_orig</span>.<span class='ident'>trim_left</span>().<span class='ident'>to_owned</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date_chars</span> <span class='op'>=</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>date_string</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>];<span class='comment'> // an array to represent the day, month, and year.
     
-    let mut date_index = 0;
+    </span><span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date_index</span> <span class='op'>=</span> <span class='number'>0</span>;
 
-    let mut format_invalid = 0; //ensuring valid format
-    for &amp;elem in date_chars.iter() {
-        format_invalid += match elem {
-            &#39;0&#39;..&#39;9&#39; =&gt; 0,
-            _        =&gt; 1
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>format_invalid</span> <span class='op'>=</span> <span class='number'>0</span>;<span class='comment'> //ensuring valid format
+    </span><span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>date_chars</span>.<span class='ident'>iter</span>() {
+        <span class='ident'>format_invalid</span> <span class='op'>+=</span> <span class='kw'>match</span> <span class='ident'>elem</span> {
+            <span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
+            _        <span class='op'>=&gt;</span> <span class='number'>1</span>
         };
     }
-    if (format_invalid &gt; 2) {
-        println!(&quot;Invalid!&quot;);
-        return (0,0,0);
+    <span class='kw'>if</span> <span class='ident'>format_invalid</span> <span class='op'>&gt;</span> <span class='number'>2</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Invalid!&quot;</span>);
+        <span class='kw'>return</span> (<span class='number'>0</span>,<span class='number'>0</span>,<span class='number'>0</span>);
     }
-    let mut temp_array: ~[char] = ~[];
-    while (date_chars.len() &gt; 0) { 
-        let date_scope_flag = match date_chars[0] {
-            &#39;0&#39;..&#39;9&#39;=&gt; false,
-            _       =&gt; true
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>temp_array</span>: <span class='kw-2'>~</span>[<span class='ident'>char</span>] <span class='op'>=</span> <span class='kw-2'>~</span>[];
+    <span class='kw'>while</span> <span class='ident'>date_chars</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> { 
+        <span class='kw'>let</span> <span class='ident'>date_scope_flag</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>date_chars</span>[<span class='number'>0</span>] {
+            <span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span><span class='op'>=&gt;</span> <span class='boolval'>false</span>,
+            _       <span class='op'>=&gt;</span> <span class='boolval'>true</span>
         };
-        if (date_scope_flag == false) {
-            temp_array.push(date_chars.shift());
-        }
-        else {
-            date[date_index] = match from_str::&lt;uint&gt;(parse_chars_to_string(temp_array.clone())) {
-                Some(num) =&gt; num,
-                _         =&gt; 0
+        <span class='kw'>if</span> <span class='ident'>date_scope_flag</span> <span class='op'>==</span> <span class='boolval'>false</span> {
+            <span class='kw'>let</span> <span class='ident'>temp_date_char</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>date_chars</span>.<span class='ident'>shift</span>() {
+                <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>c</span>,
+                _       <span class='op'>=&gt;</span> <span class='string'>&#39;0&#39;</span>,
             };
-            temp_array = ~[];
-            if (date_chars.len() &gt; 0) { date_chars.shift(); }
-            date_index += 1;
+            <span class='ident'>temp_array</span>.<span class='ident'>push</span>(<span class='ident'>temp_date_char</span>);
+        }
+        <span class='kw'>else</span> {
+            <span class='ident'>date</span>[<span class='ident'>date_index</span>] <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>parse_chars_to_string</span>(<span class='ident'>temp_array</span>.<span class='ident'>clone</span>())) {
+                <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+                _         <span class='op'>=&gt;</span> <span class='number'>0</span>
+            };
+            <span class='ident'>temp_array</span> <span class='op'>=</span> <span class='kw-2'>~</span>[];
+            <span class='kw'>if</span> <span class='ident'>date_chars</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> { <span class='ident'>date_chars</span>.<span class='ident'>shift</span>(); }
+            <span class='ident'>date_index</span> <span class='op'>+=</span> <span class='number'>1</span>;
         }
     }
-    date[2] = match from_str::&lt;uint&gt;(parse_chars_to_string(temp_array)) {
-        Some(num) =&gt; num,
-        _         =&gt; 0
+    <span class='ident'>date</span>[<span class='number'>2</span>] <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>parse_chars_to_string</span>(<span class='ident'>temp_array</span>)) {
+        <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+        _         <span class='op'>=&gt;</span> <span class='number'>0</span>
     };
-    return (date[0], date[1], date[2]);
+    <span class='kw'>return</span> (<span class='ident'>date</span>[<span class='number'>0</span>], <span class='ident'>date</span>[<span class='number'>1</span>], <span class='ident'>date</span>[<span class='number'>2</span>]);
 }
-</pre></section>
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../../";
-    </script>
-    <script src="../../../size/jquery.js"></script>
-    <script src="../../../size/search-index.js"></script>
-    <script src="../../../size/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -508,5 +511,13 @@ pub fn parse_date(string_orig: ~str) -&gt; (uint, uint, uint) {
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../../";
+        var currentCrate = "size";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script async src="../../../search-index.js"></script>
 </body>
 </html>
