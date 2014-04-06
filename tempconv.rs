@@ -13,7 +13,7 @@ fn fahr_to_cels(fahr: f64) -> f64 {
 }
 
 fn cels_to_fahr(cels: f64) -> f64 {
-    return ((cels * 9.0 / 5.0) + 32.0);
+    return (cels * 9.0 / 5.0) + 32.0;
 }
 
 fn main() {
@@ -31,9 +31,8 @@ fn main() {
                 return;
             }
         }
-        let (temperature, mut scale) = parse_string_to_float(args[1].to_owned());
+        let (temperature, scale) = parse_string_to_float(args[1].to_owned());
         if scale.len() > 0 {
-            if scale.slice_to(1) == "°" { ok(scale.shift_char()) }
             match scale.slice_to(1){
                 "F"|"f" => println!("{}C", fahr_to_cels(temperature)),
                 "C"|"c" => println!("{}F", cels_to_fahr(temperature)),
