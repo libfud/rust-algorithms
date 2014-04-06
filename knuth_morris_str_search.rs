@@ -32,9 +32,9 @@ fn kmp_find_string(keychars: &str, data: ~[~str]) -> (uint, uint) {
             //exists in the string
             //need this to return
             if found == true { break }
-            if index > 1 {
-                datastring = datastring.slice_from(index - 1).to_owned();
-                true_index += index - 1;
+            if index > 2 {
+                datastring = datastring.slice_from(index - 2).to_owned();
+                true_index += index - 2;
             }
             //this only executes if the key was not in the string;
             //it cuts off the string up to one character prior to the first
