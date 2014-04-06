@@ -19,30 +19,28 @@ fn cels_to_fahr(cels: f64) -> f64 {
 fn main() {
 
     let args = std::os::args();
+    
     let help_str = 
     "Type a number followed by f or F to signify Fahrenheit to convert it to\n"
     +"Celsius. Use c or C to convert to Celsius.";
 
-    if args.len() > 1 {
-        let argument = args[1].to_owned();
-        if argument.len() >= 2 {
-            if argument.slice_to(2) == "-h" {
-                println!("{}", help_str);
-                return;
-            }
-        }
-        let (temperature, scale) = parse_string_to_float(args[1].to_owned());
-        if scale.len() > 0 {
-            match scale.slice_to(1){
-                "F"|"f" => println!("{}C", fahr_to_cels(temperature)),
-                "C"|"c" => println!("{}F", cels_to_fahr(temperature)),
-                _ => println!("use tempconv -h for help")
-            }
-        }
-        else {
-            println!("I require you to specify fahrenheit or celsius.");
-            return;
-        }
+    if args.len() < 2 {
+        println!("{}",help_str);
+        return;
     }
-    else { println!("use tempconv -h for help") }
+    
+    let argument = args[1];
+    let (temperature, scale) = parse_string_to_float(argument);
+
+    if scale.len() > 0 {
+        match scale.slice(0,scale.len()) {
+            "F"|"f" => println!("{}C", fahr_to_cels(temperature)),
+            "C"|"c" => println!("{}F", cels_to_fahr(temperature)),
+            "-h"    => println!("{}", help_str),
+            _ => println!("use tempconv -h for help")
+        }
+    } else {
+        println!("I require you to specify fahrenheit or celsius.");
+        return;
+    }
 }
