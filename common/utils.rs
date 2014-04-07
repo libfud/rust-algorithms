@@ -57,6 +57,10 @@ pub fn array_gen(size: uint, upper_bound: uint) -> ~[uint] {
 /// of strings, each string consisting of one line from the file.
 pub fn array_from_file(strpath: &str) -> ~[~str] {
     let path = Path::new(strpath);
+    if path.exists() == false {
+        println!("Invalid filename");
+        return ~[~"nothing"];
+    }
     let mut lines: ~[~str] = ~[];
 
     let file = match File::open_mode(&path, Open, Read) {
