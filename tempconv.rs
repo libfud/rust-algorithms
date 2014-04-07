@@ -22,7 +22,7 @@ fn main() {
     
     let help_str = 
     "Type a number followed by f or F to signify Fahrenheit to convert it to\n"
-    +"Celsius. Use c or C to convert to Celsius.";
+    +"Celsius. Use c or C to convert to Fahrenheit.";
 
     if args.len() < 2 {
         println!("{}",help_str);
