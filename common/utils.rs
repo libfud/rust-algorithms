@@ -1,10 +1,30 @@
 //!  Commonly used functions 
 
 extern crate rand;
+extern crate collections;
 use self::rand::task_rng;
 use self::rand::distributions::{Range, IndependentSample};
+use self::collections::HashMap;
 use std::io;
 use std::io::{File, BufferedReader, Open, Read};
+
+///generic linear search
+pub fn linear_search<T: Eq>(array: &[T], key: T) -> (bool, uint) {
+    let mut found = false;
+
+    if array.len() < 1 { return (found, 0); }
+
+    let mut i: uint = 0;
+
+    while i < array.len() {
+        if array[i] == key {
+            found = true;
+            break;
+        } else { i += 1; }
+    }
+
+    return (found, i);
+}
 
 /// Takes a yes or no answer in string form and returns a boolean value.
 pub fn answer_to_bool(string_orig: &str) -> bool {
@@ -23,6 +43,34 @@ pub fn string_getter(question: &str) -> ~str {
     string = string.slice_to(string.len() -1).to_owned();
     if string == ~"" { string = ~"is invalid" }
     return string;
+}
+
+/// Checks arguments against a set of required arguments, returns a bool
+/// and a hashmap of the arguments
+pub fn check_args(args_to_check: ~[~str], args_given: ~[~str]) ->
+    (bool, HashMap<~str, uint>) {
+    let mut exists = true;
+
+    let mut args_table = HashMap::new();
+    let j: uint = 0;
+
+    if args_to_check.len() < 1 || args_given.len() < 1 {
+        args_table.insert(~"nothing", j);
+        return (false, args_table);
+    }
+
+    for key in args_to_check.iter() {
+        let (found, i) = linear_search(args_given.clone(), key.to_owned());
+        if found == true && i % 2 > 0 {
+            //the first argument is zer; any flag should be odd
+            args_table.insert(key.to_owned(), i);
+        } else {
+            exists = false;
+            break;
+        }
+    }
+
+    return (exists, args_table);
 }
 
 /// Takes user input and returns a floating point number.
