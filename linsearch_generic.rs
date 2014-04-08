@@ -1,8 +1,12 @@
 #![crate_id = "linear_search_generic"]
 #![crate_type = "bin"]
 
-use common::utils::{array_from_file, linear_search, check_args};
-pub mod common { pub mod utils; }
+use common::utils::{array_from_file, check_args};
+use common::search::linear_search;
+pub mod common { 
+    pub mod utils;
+    pub mod search;
+}
 
 fn main() {
     let message = "Please include the following arguments:\n"+
