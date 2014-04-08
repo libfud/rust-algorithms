@@ -4,49 +4,6 @@
 use common::utils::{array_from_file, linear_search, check_args};
 pub mod common { pub mod utils; }
 
-
-/*fn linear_search<T: Eq>(array: &[T], key: T) -> (bool, uint) {
-    let mut found = false;
-
-    if array.len() < 1 { return (found, 0); }
-
-    let mut i: uint = 0;
-
-    while i < array.len() {
-        if array[i] == key {
-            found = true;
-            break;
-        } else { i += 1; }
-    }
-
-    return (found, i);
-}
-
-
-fn check_args(args_to_check: ~[~str],args_given: ~[~str]) -> (bool, HashMap<~str, uint>) {
-    let mut exists = true;                                                    
-    let mut args_table = HashMap::new();
-    let j: uint = 0;
-
-    if args_to_check.len() < 1 || args_given.len() < 1 {
-        args_table.insert(~"nothing", j);
-        return (false, args_table);
-    }
-
-    for key in args_to_check.iter() {
-        let (found, i) = linear_search(args_given.clone(), key.to_owned());
-        if found == true && i % 2 > 0 {
-            //the first argument is zero; any flag proceeding should be odd
-            args_table.insert(key.to_owned(), i);
-        } else {
-            exists = false;
-            break;
-        }
-    }
-
-    return (exists, args_table);
-}  */
-
 fn main() {
     let message = "Please include the following arguments:\n"+
     "-i FILENAME for the file to be searched\n"+
@@ -54,9 +11,6 @@ fn main() {
 
     let args = std::os::args();
     let args_to_check = ~[~"-k", ~"-i"];
-    if args.len() - 1 > args_to_check.len() * 2 {
-        println!("{}", message);
-    }
     let (args_found, args_table) = check_args(args_to_check.clone(), args.clone());
     
     if args_found == false { 
