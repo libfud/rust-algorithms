@@ -320,6 +320,9 @@
 <span id='282'>282</span>
 <span id='283'>283</span>
 <span id='284'>284</span>
+<span id='285'>285</span>
+<span id='286'>286</span>
+<span id='287'>287</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//!  Commonly used functions 
 </span>
@@ -332,6 +335,9 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>File</span>, <span class='ident'>BufferedReader</span>, <span class='ident'>Open</span>, <span class='ident'>Read</span>};
 
 <span class='doccomment'>///generic linear search
+</span><span class='doccomment'>///For any type which allows binary comparisons, it iterates through
+</span><span class='doccomment'>///the array and returns a boolean  for whether or not the key
+</span><span class='doccomment'>///was found, and if true returns the element at which it was found.
 </span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>linear_search</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Eq</span><span class='op'>&gt;</span>(<span class='ident'>array</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>key</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> (<span class='ident'>bool</span>, <span class='ident'>uint</span>) {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>found</span> <span class='op'>=</span> <span class='boolval'>false</span>;
 
@@ -644,7 +650,7 @@
 
     <script>
         var rootPath = "../../../";
-        var currentCrate = "size";
+        var currentCrate = "boyer_moore";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
