@@ -15,7 +15,7 @@ pub mod common { pub mod utils; }
 ///Takes an array of owned strings and a string, and returns the
 ///index of the string holding the key and the index at which the
 ///key starts.
-fn kmp_find_string(keychars: &str, data: ~[~str]) -> (uint, uint) {
+fn kmp_find_string(keychars: &str, data: ~[~str]) -> (bool, uint, uint) {
 
     let mut i = 0;
     let mut found = false;
@@ -54,7 +54,7 @@ fn kmp_find_string(keychars: &str, data: ~[~str]) -> (uint, uint) {
         //advance to the next string
     }
 
-    return (i, true_index);
+    return (found, i, true_index);
 }
 
 ///Compare two arrays of characters. Returns the index at which it stops
@@ -106,13 +106,13 @@ fn main() {
         _               => ~"invalid"
     };
     
-    let (textindex, stringindex) = kmp_find_string(searchstring, textarray.clone());
+    let (found, textindex, stringindex) = kmp_find_string(searchstring, textarray.clone());
 
     if textindex >= textarray.len() {
         println!("Not found.");
         return;
     } else {
-        println!("{} {}", textindex, stringindex);
+        println!("{} {} {}",found,  textindex, stringindex);
     }
 }
 
