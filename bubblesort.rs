@@ -31,7 +31,6 @@ fn main() {
         println!("I need a filename.");
         return;
     }
-
     let pathname = args[1].to_owned();
     let array = int_array_from_file(pathname);
     let sorted_array = bubble_sort(array);
