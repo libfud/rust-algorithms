@@ -5,6 +5,9 @@
 //! I think. I didn't read it too carefully, so this might not actually capture
 //! the spirit of it, but it works, and it's faster than naive string search.
 
+extern crate getopts;
+use getopts::{reqopt, getopts};
+use std::os;
 use common::utils::array_from_file;
 
 pub mod common { pub mod utils; }
@@ -74,7 +77,7 @@ fn compare_chars(stringa: &str, stringb: &str) ->  uint {
 }
 
 fn main() {
-    let args = std::os::args();
+    let args = os::args();
 
     if args.len() < 3 {
         print!("I need two filenames, one for the text to be searched, and ");
@@ -82,12 +85,26 @@ fn main() {
         return;
     }
 
-    let textpath = args[1].to_owned();
-    let textarray = array_from_file(textpath);
+    let opts = ~[
+        reqopt("i", "input", "input file name", "FILENAME"),
+        reqopt("k", "key", "key", "KEY VALUE"),
+    ];
 
-    let searchpath = args[2].to_owned();
-    let searcharray = array_from_file(searchpath);
-    let searchstring = searcharray[0].slice_to(searcharray[0].len() - 1).to_owned();
+    let matches = match getopts(args.tail(), opts) {
+        Ok(m)   => { m }
+        Err(f)  => { fail!(f.to_err_msg()) }
+    };
+
+    let input_filename = match matches.opt_str("i") {
+        Some(string) => string,
+        _            => ~"Invalid"
+    }; 
+    let textarray = array_from_file(input_filename);
+
+    let searchstring = match matches.opt_str("k") {
+        Some(string)    => string,
+        _               => ~"invalid"
+    };
     
     let (textindex, stringindex) = kmp_find_string(searchstring, textarray.clone());
 
