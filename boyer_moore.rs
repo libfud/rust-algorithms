@@ -4,9 +4,7 @@
 //!Boyer Moore string search, simplified. No good suffix rule here.
 
 extern crate getopts;
-extern crate collections;
 use getopts::{reqopt, optflag,getopts,OptGroup};
-use collections::HashMap;
 use std::os;
 use common::utils::{array_from_file};
 
@@ -23,16 +21,22 @@ fn print_usage(program: &str, _opts: &[OptGroup]) {
 ///index of that string at which it was found.
 fn boyer_moore_search(array: &[~str], key: &str) -> (bool, uint, uint) {
     if array.len() < 1 || key.len() < 1 { return (false, 0u, 0u) }
-    let bad_table = bad_char_table_gen(key);
+
+    let mut bad_table = [key.len(), .. 256];
+    let mut i = 0;
+    for &eachbyte in key.as_bytes().iter() {
+        let jump = key.len() - 1 -i;
+        if jump > key.len() || jump == 0 {
+            bad_table[eachbyte as uint] = 1;
+        } else {
+            bad_table[eachbyte as uint] = jump;
+        }
+        i += 1;
+    }
+    
     let mut match_pos: uint;
     let mut found: bool;
     let mut i = 0u; //i is the index of the string in the array
-    let mut keylen = 0u;
-
-    for _ in key.chars() {
-        keylen += 1;
-    }
-    //There's probably a method to do this better.
 
     loop {
         //match position is the index of the string at which the key is
@@ -47,8 +51,7 @@ fn boyer_moore_search(array: &[~str], key: &str) -> (bool, uint, uint) {
             let right_i = match_pos + key.len(); //we're slicing strings
             if right_i  > str_len { break } //no oob
             let (found_inner, jump) = reverse_search(
-                string_i.slice(match_pos, right_i), key, keylen,
-                bad_table.clone());
+                string_i.slice(match_pos, right_i), key, bad_table);
             if found_inner == true {
                 found = true;
                 break;
@@ -66,19 +69,15 @@ fn boyer_moore_search(array: &[~str], key: &str) -> (bool, uint, uint) {
 ///Reverse iterates through the two strings; the key and the string
 ///we're searching. Returns whether or not we found a match (i == 0)
 ///and an unsigned integer to advance the slicing point.
-fn reverse_search(stringa: &str,key: &str, keylen: uint,
-    table: HashMap<char,uint>) -> (bool, uint) {
-    let mut i = keylen; //don't want to mutate the length of the key
+fn reverse_search(stringa: &str,key: &str, table: [uint, ..256]) -> (bool, uint) {
+
+    let mut i = key.char_len(); //don't want to mutate the length of the key
     let mut j = 1u; 
     let mut found = false;
     //reverse iterate through  the key and the substring
-    for (chara, charb) in key.chars_rev().zip(stringa.chars_rev()) {
+    for (chara, charb) in key.bytes().rev().zip(stringa.bytes().rev()) {
         if chara != charb {
-            //j gets assigned the appropriate jump value from the table
-            j  = match table.find(&charb) {
-                Some(jump_value)    => jump_value.clone(),
-                _                   => j
-            }; 
+            j = table[charb as uint];
             break;
         }
         i -= 1;
@@ -90,25 +89,6 @@ fn reverse_search(stringa: &str,key: &str, keylen: uint,
     //get incremented
     return (found, i + 1) 
     //this happens if the prior comparison was false
-}
-
-///generate a hashmap mapping a uint value to each char in the key
-///depending on how many instances of the char are in the key and
-///the location of the char in the key
-fn bad_char_table_gen(key: &str) -> HashMap<char, uint> {
-    let mut bad_table = HashMap::new();
-    let length = key.len();
-    let mut i = 0u;
-    for eachc in key.chars()  {
-        let jump = length - 1 - i;
-        if jump > length || jump == 0 {
-            bad_table.insert_or_update_with(eachc, 1, |_k, v| *v = 1);
-        } else {
-            bad_table.insert_or_update_with(eachc, jump, |_k, v| *v = jump);
-        }
-        i += 1;
-    }
-    return bad_table;
 }
 
 fn main() {
