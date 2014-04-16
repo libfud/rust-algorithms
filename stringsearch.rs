@@ -3,8 +3,10 @@
 
 //! An implimentation of a naive string search.
 
+extern crate getopts;
+use getopts::{reqopt, getopts};
+use std::os;
 use common::utils::array_from_file;
-
 pub mod common { pub mod utils; }
 
 
@@ -12,11 +14,11 @@ pub mod common { pub mod utils; }
 /// as the text to be searched, and returns the string's index in the array, 
 /// and the index of string at which the first instantiation of the key was
 /// found.
-fn find_string(keychars: ~str, data: ~[~str]) -> (uint, int) {
+fn find_string(keychars: ~str, data: ~[~str]) -> (bool, uint, uint) {
     
     let mut i = 0;
     let mut found = false;
-    let mut index: int = 0;  //int rather than uint so -1 can show not found
+    let mut index: uint = 0;  
 
     loop {
         if i >= data.len() { break } //don't try OOB access
@@ -36,8 +38,7 @@ fn find_string(keychars: ~str, data: ~[~str]) -> (uint, int) {
         i += 1;
     }
 
-    if found == false { index = -1 }
-    return (i, index);
+    return (found, i, index);
 }
 
 /// Compares two arrays of characters. They do not have to be of equal
@@ -65,30 +66,29 @@ fn compare_chars(stringa: ~str, stringb: ~str) -> bool {
         
 
 fn main() {
-    let args = std::os::args();
-    
-    if args.len() < 3 {
-        print!("You must input at least two files; one of the text to be");
-        println!(" searched, and one holding the search string, in that order.");
-        println!("For example, ./searchstring texts/this.txt texts/that.txt");
-        return;
-    }
+    let args = os::args();
 
-    let textpath = args[1].to_owned();
+    let opts = ~[
+        reqopt("i", "input", "input file name", "FILE NAME"),
+        reqopt("k", "key", "key", "KEY VALUE"),
+    ];
+
+    let matches = match getopts(args.tail(), opts) {
+        Ok(m)   => { m },
+        Err(f)  => { fail!(f.to_err_msg()) }
+    };
+
+    let textpath = match matches.opt_str("i") {
+        Some(string)    => string,
+        _               => ~"INVALID"
+    };
     let textarray = array_from_file(textpath);
 
-    let searchpath = args[2].to_owned();
-    let searcharray = array_from_file(searchpath);
-    let searchstring = searcharray[0].slice_to(searcharray[0].len() - 1).to_owned();
-    //FIXME -- Okay, I still need to work with IO in rust. This is an ugly kludge.
+    let searchstring = match matches.opt_str("k") {
+        Some(string)    => string,
+        _               => ~"invalid"
+    };
 
-    let (textindex, stringindex) = find_string(searchstring, textarray.clone());
-    if stringindex < 0 { 
-        println!("Not found.");
-        return;
-    }
-    else {
-        println!("{} {}", textindex, stringindex);
-    }
-    
+    let (found, textindex, stringindex) = find_string(searchstring, textarray.clone());
+    println!("{} {} {}", found, textindex, stringindex);
 }
