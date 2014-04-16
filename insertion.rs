@@ -1,4 +1,6 @@
-/*Insertion sort*/
+#![crate_id = "insertion_sort"]
+#![crate_type = "bin"]
+//!Insertion sort
 
 pub mod common { pub mod utils; }
 
