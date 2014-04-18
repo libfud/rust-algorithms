@@ -29,7 +29,7 @@ pub fn linear_search<T: Eq>(array: &[T], key: T) -> (bool, uint) {
     return (found, i);
 }
 
-/// Takes a yes or no answer in string form and returns a boolean value.
+///Takes a yes or no answer in string form and returns a boolean value.
 pub fn answer_to_bool(string_orig: &str) -> bool {
     let string = string_orig.slice_to(1);
     match string.trim_left() {
@@ -38,7 +38,7 @@ pub fn answer_to_bool(string_orig: &str) -> bool {
     };
 }
 
-/// Returns a string in response to a question.
+///Returns a string in response to a question.
 pub fn string_getter(question: &str) -> ~str {
     println!("{}",question);
     let mut reader = io::stdin();
@@ -48,8 +48,8 @@ pub fn string_getter(question: &str) -> ~str {
     return string;
 }
 
-/// Checks arguments against a set of required arguments, returns a bool
-/// and a hashmap of the arguments
+///Checks arguments against a set of required arguments, returns a bool
+///and a hashmap of the arguments
 pub fn check_args(args_to_check: ~[~str], args_given: ~[~str]) ->
     (bool, HashMap<~str, uint>) {
     let mut exists = true;
@@ -185,7 +185,7 @@ pub fn float_array_from_file(strpath: &str) -> (~[f64],~[~str]) {
 pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
     let string = string_orig.trim_left().to_owned();
     let mut float_chars = parse_string_to_chars(string);
-    let mut float_string: ~str = ~"0";
+    let mut float_strbuf: StrBuf = StrBuf::from_str("0");
     let mut decimal_flag = false;
     loop {
         if float_chars.len() == 0 { break }
@@ -196,18 +196,18 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
         if  float_chars[0] == '.' {
             if decimal_flag == false {
                 decimal_flag = true;
-                float_string.push_char(float_chars[0]);
+                float_strbuf.push_char(float_chars[0]);
                 float_chars.shift();
             }
             else { break }
         }
         else if number_bool == true {
-            float_string.push_char(float_chars[0]);
+            float_strbuf.push_char(float_chars[0]);
             float_chars.shift();
         }
         else { break }
     }
-    let float_number = match from_str::<f64>(float_string) {
+    let float_number = match from_str::<f64>(float_strbuf.into_owned()) {
         Some(num) => num,
         None => 0.0
     };
@@ -226,13 +226,13 @@ pub fn parse_string_to_chars(string: &str) -> ~[char] {
 
 /// Turns an owned vector of chars into an owned string.
 pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
-    let mut string: ~str = ~"";
+    let mut string: StrBuf = StrBuf::from_str("");
     if char_string.len() > 0 {
         for &elem in char_string.iter() {
             string.push_char(elem);
         }
     }
-    return string;
+    return string.into_owned();
 }
 
 /// Parses a string in date format into a tuple of three integers for
