@@ -241,7 +241,7 @@ pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
 pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
     let date_string = string_orig.trim_left().to_owned();
     let mut date_chars = parse_string_to_chars(date_string);
-    let mut date = [0, 0, 0]; // an array to represent the day, month, and year.
+    let mut date = [0, 0, 0]; // an array to represent day, month, and year.
     
     let mut date_index = 0;
 
@@ -270,7 +270,8 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
             temp_array.push(temp_date_char);
         }
         else {
-            date[date_index] = match from_str::<uint>(parse_chars_to_string(temp_array.clone())) {
+            date[date_index] = match from_str::<uint>(parse_chars_to_string(
+                temp_array.clone())) {
                 Some(num) => num,
                 _         => 0
             };
