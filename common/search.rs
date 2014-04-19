@@ -1,5 +1,7 @@
 //!Search functions.
 
+use std::hash::hash;
+
 ///generic linear search
 ///For any type which allows binary comparisons, it iterates through
 ///the array and returns a boolean  for whether or not the key
@@ -21,6 +23,10 @@ pub fn linear_search<T: Eq>(array: &[T], key: T) -> (bool, uint) {
     return (found, i);
 }
 
+/// Binary search. Takes a generic array whose type implements Ord (binary 
+/// comparisons), a key, the index at which to begin, and the index at which 
+/// to stop. Returns a bool to indicate if it was found and the index at which
+/// it was found.
 pub fn binary_search<T: Ord >(array: &[T], key: T, min_index_orig: uint, max_index_orig: uint) -> (bool, uint) {
     let mut found = false;
     let mut min_index = min_index_orig;
@@ -47,6 +53,10 @@ pub fn binary_search<T: Ord >(array: &[T], key: T, min_index_orig: uint, max_ind
     return (found, mid_index);
 }
 
+/// A brute force string search which scans from left to right. Takes an array
+/// of strings and a key, and returns whether or not it was found, the index 
+/// of the array holding the string in which it was found, and the index of 
+/// the string at which the key begins.
 pub fn naive_string_search(key: ~str, str_array: ~[~str]) -> (bool, uint, uint) {
     let mut i: uint = 0;
     let mut found = false;
@@ -73,6 +83,11 @@ pub fn naive_string_search(key: ~str, str_array: ~[~str]) -> (bool, uint, uint) 
     return (found, i, index);
 }
 
+/// Knuth-Morris-Pratt string search. Uses partial matches to advance faster
+/// for a given mismatch than does the naive string search. Takes an array 
+/// of strings, a key, and returns whether the key was found, and if so,
+/// the index of the array holding the string in which it was found,
+/// and the index of the string at which the key begins.
 pub fn kmp_string_search(key: ~str, str_array: ~[~str]) -> (bool, uint, uint) {
     let mut i: uint = 0;
     let mut found = false;
@@ -152,6 +167,9 @@ pub fn boyer_moore(array: &[~str], key: &str) -> (bool, uint, uint) {
     return (found, i, match_pos)
 }
 
+/// Compares two strings. Returns an unsigned integer. If the integer is 
+/// less than the length of the shorter string, then there is
+/// a mismatch; otherwise they are equal.
 pub fn compare_strings(stringa: ~str, stringb: ~str) -> uint {
     let mut i = 0;
 
@@ -185,4 +203,44 @@ pub fn reverse_search(stringa: &str, key: &str, table: [uint, ..256])
     if i == 0 { found = true }
     if j < i + 1 { return (found, j) }
     else { return (found, i + 1) }
+}
+
+/// Takes an array of strings and successively iterates through each string.
+/// On each iteration, it compares the hash of a substring of equal length
+/// to the key to the hash of the key, and terminates either when a match
+/// is found or if all possibilities are exhausted. Returns a boolean
+/// to indicate if it was found, the index (uint) of the array holding
+/// the string in which it was found, and the index (uint) of that
+/// string at which the matching substring begins.
+pub fn rubin_karp(array: &[~str], key: &str) -> (bool, uint, uint) {
+    let mut index = 0u;
+    let mut found = false;
+    let mut str_index = 0u;
+
+    if array.len() < 1 || key.len() < 1 { return (found, index, str_index) }
+
+    let keyhash = hash(&key);
+    
+    loop {
+        if index >= array.len() { break }
+        let string_i = array[index].clone();
+        str_index = 0;
+
+        loop { 
+            let right_index = str_index + key.len();
+            if right_index > string_i.len() { break }
+            if hash(&string_i.slice(str_index, right_index)) == keyhash {
+                found = true
+            }
+            if found == true { break }
+            else { 
+                str_index += 1;
+            }
+        }
+
+        if found == true { break }
+        else { index += 1 }
+    }
+
+    return (found, index, str_index)
 }
