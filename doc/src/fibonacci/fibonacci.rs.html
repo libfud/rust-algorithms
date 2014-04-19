@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <title>fibonacci.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../fibonacci/main.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
 </head>
@@ -75,56 +75,59 @@
 <span id='37'>37</span>
 <span id='38'>38</span>
 <span id='39'>39</span>
-</pre><pre class='rust'>#[crate_id = &quot;fibonacci&quot;];
-#[crate_type = &quot;bin&quot;];
+<span id='40'>40</span>
+<span id='41'>41</span>
+<span id='42'>42</span>
+<span id='43'>43</span>
+</pre><pre class='rust '>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_id</span> <span class='op'>=</span> <span class='string'>&quot;fibonacci&quot;</span>]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;bin&quot;</span>]</span>
 
-//! Returns the nth element of the fibonacci sequence.
+<span class='doccomment'>//! Returns the nth element of the fibonacci sequence.
+</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>common</span> { <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>utils</span>; }
 
-pub mod common { pub mod utils; }
-
-///Creates an array with elements that are from the fibonacci
-/// sequence. Takes an argument for how many elements to generate.
-fn fib ( nth_elem: uint ) -&gt; ~[uint] {
-    assert!(nth_elem &gt;= 2);
-    let mut array = ~[0, 1];
-    let mut current_elem = 2;       //the third element 
-    while current_elem &lt;= nth_elem {
-        array.push(array[current_elem - 2] + array[current_elem - 1]);
-        current_elem += 1;
+<span class='doccomment'>///Creates an array with elements that are from the fibonacci
+</span><span class='doccomment'>/// sequence. Takes an argument for how many elements to generate.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fib</span> ( <span class='ident'>nth_elem</span>: <span class='ident'>uint</span> ) <span class='op'>-&gt;</span> <span class='kw-2'>~</span>[<span class='ident'>u64</span>] {
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>nth_elem</span> <span class='op'>&gt;=</span> <span class='number'>2</span>);
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>array</span> <span class='op'>=</span> <span class='kw-2'>~</span>[<span class='number'>0</span>, <span class='number'>1</span>];
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>current_elem</span> <span class='op'>=</span> <span class='number'>2</span>;<span class='comment'>       //the third element 
+    </span><span class='kw'>while</span> <span class='ident'>current_elem</span> <span class='op'>&lt;=</span> <span class='ident'>nth_elem</span> {
+        <span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>array</span>[<span class='ident'>current_elem</span> <span class='op'>-</span> <span class='number'>2</span>] <span class='op'>+</span> <span class='ident'>array</span>[<span class='ident'>current_elem</span> <span class='op'>-</span> <span class='number'>1</span>]);
+        <span class='ident'>current_elem</span> <span class='op'>+=</span> <span class='number'>1</span>;
     }
-    return array
+    <span class='kw'>return</span> <span class='ident'>array</span>
 }
 
-fn main() {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() {
     
-    let args = std::os::args();
+    <span class='kw'>let</span> <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>args</span>();
 
-    let mut nth_elem: uint = 10; //Dummy for no arguments.
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>nth_elem</span>: <span class='ident'>uint</span> <span class='op'>=</span> <span class='number'>10</span>;<span class='comment'> //Dummy for no arguments.
     
-    if args.len() &gt; 1 {
-        nth_elem = match from_str::&lt;uint&gt;(args[1].to_owned()) {
-            Some(num) =&gt; num,
-            _         =&gt; 10
+    </span><span class='kw'>if</span> <span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> {
+        <span class='ident'>nth_elem</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>args</span>[<span class='number'>1</span>].<span class='ident'>to_owned</span>()) {
+            <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+            _         <span class='op'>=&gt;</span> <span class='number'>10</span>
         };
-    } else {
-        println!(&quot;Generating {} numbers in the fibonacci sequence.&quot;,nth_elem);
+    } <span class='kw'>else</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Generating {} numbers in the fibonacci sequence.&quot;</span>,<span class='ident'>nth_elem</span>);
+    }
+    <span class='kw'>if</span> <span class='ident'>nth_elem</span> <span class='op'>&gt;</span> <span class='number'>93</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is too big, using 93.&quot;</span>,<span class='ident'>nth_elem</span>);
+        <span class='ident'>nth_elem</span> <span class='op'>=</span> <span class='number'>93</span>;
     }
 
-    let array = fib(nth_elem);
-    let fib_nth = array[nth_elem];
-    println!(&quot;The {}th number in the fibonacci sequence is {}.&quot;,nth_elem,fib_nth);
+    <span class='kw'>let</span> <span class='ident'>array</span> <span class='op'>=</span> <span class='ident'>fib</span>(<span class='ident'>nth_elem</span>);
+    <span class='kw'>let</span> <span class='ident'>fib_nth</span> <span class='op'>=</span> <span class='ident'>array</span>[<span class='ident'>nth_elem</span>];
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;The {}th number in the fibonacci sequence is {}.&quot;</span>,<span class='ident'>nth_elem</span>,<span class='ident'>fib_nth</span>);
 }
-</pre></section>
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../";
-    </script>
-    <script src="../../fibonacci/jquery.js"></script>
-    <script src="../../fibonacci/search-index.js"></script>
-    <script src="../../fibonacci/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -156,5 +159,13 @@ fn main() {
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../";
+        var currentCrate = "fibonacci";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>

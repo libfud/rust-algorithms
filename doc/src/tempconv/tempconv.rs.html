@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <title>tempconv.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../tempconv/main.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
 </head>
@@ -68,49 +68,80 @@
 <span id='30'>30</span>
 <span id='31'>31</span>
 <span id='32'>32</span>
-</pre><pre class='rust'>#[crate_id = &quot;tempconv&quot;];
-#[crate_type = &quot;bin&quot;];
+<span id='33'>33</span>
+<span id='34'>34</span>
+<span id='35'>35</span>
+<span id='36'>36</span>
+<span id='37'>37</span>
+<span id='38'>38</span>
+<span id='39'>39</span>
+<span id='40'>40</span>
+<span id='41'>41</span>
+<span id='42'>42</span>
+<span id='43'>43</span>
+<span id='44'>44</span>
+<span id='45'>45</span>
+<span id='46'>46</span>
+<span id='47'>47</span>
+<span id='48'>48</span>
+<span id='49'>49</span>
+<span id='50'>50</span>
+</pre><pre class='rust '>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_id</span> <span class='op'>=</span> <span class='string'>&quot;tempconv&quot;</span>]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;bin&quot;</span>]</span>
 
-//! Converts decimal integers or floating point numbers of either fahrenheit
-//! or celsius to celsius or fahrenheit, respectively.
+<span class='doccomment'>//! Converts decimal integers or floating point numbers of either fahrenheit
+</span><span class='doccomment'>//! or celsius to celsius or fahrenheit, respectively.
+</span>
+<span class='kw'>use</span> <span class='ident'>common</span>::<span class='ident'>utils</span>::<span class='ident'>parse_string_to_float</span>;
 
-use common::utils::parse_string_to_float;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>common</span> { <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>utils</span>; } 
 
-pub mod common { pub mod utils; } 
-
-fn fahr_to_cels(fahr: f64) -&gt; f64 {
-    return (fahr - 32.0) * 5.0 / 9.0;
+<span class='doccomment'>/// Converts a temperature from fahrenheit to celsius.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fahr_to_cels</span>(<span class='ident'>fahr</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+    <span class='kw'>return</span> (<span class='ident'>fahr</span> <span class='op'>-</span> <span class='number'>32.0</span>) <span class='op'>*</span> <span class='number'>5.0</span> <span class='op'>/</span> <span class='number'>9.0</span>;
 }
 
-fn cels_to_fahr(cels: f64) -&gt; f64 {
-    return cels * 5.0 / 9.0 + 32.0;
+<span class='doccomment'>/// Converts a temperature from celsius to fahrenheit.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cels_to_fahr</span>(<span class='ident'>cels</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>f64</span> {
+    <span class='kw'>return</span> (<span class='ident'>cels</span> <span class='op'>*</span> <span class='number'>9.0</span> <span class='op'>/</span> <span class='number'>5.0</span>) <span class='op'>+</span> <span class='number'>32.0</span>;
 }
 
-fn main() {
-    let args = std::os::args();
-    if args.len() &lt; 3 { 
-        println(&quot;:^o&quot;);
-        return;
+<span class='doccomment'>/// Takes a floating point number from stdin followed by C or F to show
+</span><span class='doccomment'>/// the scale.
+</span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() {
+
+    <span class='kw'>let</span> <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>args</span>();
+    
+    <span class='kw'>let</span> <span class='ident'>help_str</span> <span class='op'>=</span> 
+    <span class='string'>&quot;Type a number followed by f or F to signify Fahrenheit to convert it to\n&quot;</span>
+    <span class='op'>+</span><span class='string'>&quot;Celsius. Use c or C to convert to Fahrenheit.&quot;</span>;
+
+    <span class='kw'>if</span> <span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='number'>2</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>,<span class='ident'>help_str</span>);
+        <span class='kw'>return</span>;
     }
+    
+    <span class='kw'>let</span> <span class='ident'>argument</span> <span class='op'>=</span> <span class='ident'>args</span>[<span class='number'>1</span>];
+    <span class='kw'>let</span> (<span class='ident'>temperature</span>, <span class='ident'>scale</span>) <span class='op'>=</span> <span class='ident'>parse_string_to_float</span>(<span class='ident'>argument</span>);
 
-    let (temperature, scale) = parse_string_to_float(args[2].to_owned());
-
-    match args[1].to_owned() {
-        ~&quot;-f&quot;|~&quot;f&quot; =&gt; println!(&quot;{}&quot;, fahr_to_cels(temperature)),
-        _ =&gt; println(&quot;Woops&quot;)
+    <span class='kw'>if</span> <span class='ident'>scale</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
+        <span class='kw'>match</span> <span class='ident'>scale</span>.<span class='ident'>slice</span>(<span class='number'>0</span>,<span class='ident'>scale</span>.<span class='ident'>len</span>()) {
+            <span class='string'>&quot;F&quot;</span><span class='op'>|</span><span class='string'>&quot;f&quot;</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}C&quot;</span>, <span class='ident'>fahr_to_cels</span>(<span class='ident'>temperature</span>)),
+            <span class='string'>&quot;C&quot;</span><span class='op'>|</span><span class='string'>&quot;c&quot;</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}F&quot;</span>, <span class='ident'>cels_to_fahr</span>(<span class='ident'>temperature</span>)),
+            <span class='string'>&quot;-h&quot;</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>help_str</span>),
+            _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;use tempconv -h for help&quot;</span>)
+        }
+    } <span class='kw'>else</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;I require you to specify fahrenheit or celsius.&quot;</span>);
+        <span class='kw'>return</span>;
     }
 }
-</pre></section>
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../";
-    </script>
-    <script src="../../tempconv/jquery.js"></script>
-    <script src="../../tempconv/search-index.js"></script>
-    <script src="../../tempconv/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -142,5 +173,13 @@ fn main() {
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../";
+        var currentCrate = "tempconv";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>
