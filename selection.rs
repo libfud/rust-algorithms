@@ -3,7 +3,10 @@
 
 //!Selection sort implementation.
 
-pub mod common { pub mod utils; }
+pub mod common { 
+    pub mod utils;
+    pub mod sort;
+}
 
 fn main() {
     let args = std::os::args();
@@ -12,7 +15,8 @@ fn main() {
         return;
     }
     let pathname = args[1].to_owned();
-    let mut array = common::utils::int_array_from_file(pathname);
+    let array = common::utils::int_array_from_file(pathname);
+    /*
     let mut i = 0;
     while i < (array.len() -1) {    // The outer loop will iterate through 
                                     //each element in the array.
@@ -30,7 +34,9 @@ fn main() {
         }
         i+=1;
     }
-    for &elem in array.iter(){
+    */
+    let array_sorted = common::sort::selection_sort(array);
+    for &elem in array_sorted.iter(){
         println!("{}",elem);
     }
 }
