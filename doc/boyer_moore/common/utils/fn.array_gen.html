@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The boyer_moore library documentation.">
+
     <title>boyer_moore::common::utils::array_gen - Rust</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
@@ -26,7 +29,6 @@
 
     <nav class="sub">
         <form class="search-form js-only">
-            <button class="do-search">Search</button>
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
@@ -36,8 +38,9 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn"><a class='source'
-                              href='../../../src/boyer_moore/common/utils.rs.html#94-105'>[src]</a><h1 class='fqn'>Function <a href='../../index.html'>boyer_moore</a>::<a href='../index.html'>common</a>::<a href='index.html'>utils</a>::<a class='fn' href=''>array_gen</a></h1><pre class='rust fn'>pub fn array_gen(size: uint, upper_bound: uint) -&gt; ~[uint]</pre><div class='docblock'><p>Generates an array with the number of elements specified by size.
+    <section id='main' class="content fn">
+<h1 class='fqn'>Function <a href='../../index.html'>boyer_moore</a>::<a href='../index.html'>common</a>::<a href='index.html'>utils</a>::<a class='fn' href=''>array_gen</a><a class='source'href='../../../src/boyer_moore/common/utils.rs.html#94-105'>[src]</a></h1>
+<pre class='rust fn'>pub fn array_gen(size: uint, upper_bound: uint) -&gt; ~[uint]</pre><div class='docblock'><p>Generates an array with the number of elements specified by size.
 Upper bound limits the size of the numbers generated to itself
 times the number of elements requested. For example, if you
 request 10 elements and specify an upper bound of 2, you will get

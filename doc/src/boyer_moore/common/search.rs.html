@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The boyer_moore library documentation.">
+
     <title>search.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
@@ -26,7 +29,6 @@
 
     <nav class="sub">
         <form class="search-form js-only">
-            <button class="do-search">Search</button>
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
@@ -224,7 +226,6 @@
 <span id='186'>186</span>
 <span id='187'>187</span>
 <span id='188'>188</span>
-<span id='189'>189</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//!Search functions.
 </span>
@@ -283,15 +284,15 @@
     <span class='kw'>loop</span> {
         <span class='ident'>index</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&gt;=</span> <span class='ident'>str_array</span>.<span class='ident'>len</span>() { <span class='kw'>break</span> }
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>str_array</span>[<span class='ident'>i</span>].<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>str_array</span>[<span class='ident'>i</span>].<span class='ident'>clone</span>().<span class='ident'>to_owned</span>();
         <span class='kw'>loop</span> {
             <span class='kw'>if</span> <span class='ident'>key</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='ident'>string</span>.<span class='ident'>len</span>() { <span class='kw'>break</span> }
-            <span class='kw'>if</span> <span class='ident'>key</span>[<span class='number'>0</span>] <span class='op'>==</span> <span class='ident'>string</span>[<span class='number'>0</span>] {
-                <span class='kw'>let</span> <span class='ident'>test_index</span><span class='op'>=</span> <span class='ident'>compare_strings</span>(<span class='ident'>key</span>.<span class='ident'>clone</span>(), <span class='ident'>string</span>.<span class='ident'>clone</span>());
+            <span class='kw'>if</span> <span class='ident'>key</span>[<span class='number'>0</span>] <span class='op'>==</span> <span class='ident'>string</span>[<span class='ident'>index</span>] {
+                <span class='kw'>let</span> <span class='ident'>test_index</span><span class='op'>=</span> <span class='ident'>compare_strings</span>(<span class='ident'>key</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>string</span>.<span class='ident'>slice_from</span>(<span class='ident'>index</span>).<span class='ident'>to_owned</span>());
                 <span class='kw'>if</span> <span class='ident'>test_index</span> <span class='op'>==</span> <span class='ident'>key</span>.<span class='ident'>len</span>() { <span class='ident'>found</span> <span class='op'>=</span> <span class='boolval'>true</span> }
             }
             <span class='kw'>if</span> <span class='ident'>found</span> <span class='op'>==</span> <span class='boolval'>true</span> { <span class='kw'>break</span> }
-            <span class='ident'>string</span>.<span class='ident'>shift_char</span>();
             <span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
         }
         <span class='kw'>if</span> <span class='ident'>found</span> <span class='op'>==</span> <span class='boolval'>true</span> { <span class='kw'>break</span> }
@@ -310,19 +311,18 @@
     <span class='kw'>loop</span> {
         <span class='ident'>true_index</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&gt;=</span> <span class='ident'>str_array</span>.<span class='ident'>len</span>() { <span class='kw'>break</span> }
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string_i</span> <span class='op'>=</span> <span class='ident'>str_array</span>[<span class='ident'>i</span>].<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>string_i</span> <span class='op'>=</span> <span class='ident'>str_array</span>[<span class='ident'>i</span>].<span class='ident'>clone</span>();
         <span class='kw'>loop</span> {
             <span class='kw'>if</span> <span class='ident'>key</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='ident'>string_i</span>.<span class='ident'>len</span>() { <span class='kw'>break</span> }
-            <span class='ident'>index</span> <span class='op'>=</span> <span class='ident'>compare_strings</span>(<span class='ident'>key</span>.<span class='ident'>clone</span>(), <span class='ident'>string_i</span>.<span class='ident'>clone</span>());
+            <span class='ident'>index</span> <span class='op'>=</span> <span class='ident'>compare_strings</span>(<span class='ident'>key</span>.<span class='ident'>clone</span>(), 
+                <span class='ident'>string_i</span>.<span class='ident'>slice_from</span>(<span class='ident'>true_index</span>).<span class='ident'>to_owned</span>());
             <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>==</span> <span class='ident'>key</span>.<span class='ident'>len</span>() {
                 <span class='ident'>found</span> <span class='op'>=</span> <span class='boolval'>true</span>;
                 <span class='kw'>break</span>;
             }
             <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&gt;</span> <span class='number'>2</span> {
-                <span class='ident'>string_i</span> <span class='op'>=</span> <span class='ident'>string_i</span>.<span class='ident'>slice_from</span>(<span class='ident'>index</span> <span class='op'>-</span> <span class='number'>2</span>).<span class='ident'>to_owned</span>();
                 <span class='ident'>true_index</span> <span class='op'>+=</span> <span class='ident'>index</span> <span class='op'>-</span> <span class='number'>2</span>;
             } <span class='kw'>else</span> {
-                <span class='ident'>string_i</span>.<span class='ident'>shift_char</span>();
                 <span class='ident'>true_index</span> <span class='op'>+=</span> <span class='number'>1</span>;
             }
         }

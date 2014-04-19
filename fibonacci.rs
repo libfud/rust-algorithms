@@ -7,7 +7,7 @@ pub mod common { pub mod utils; }
 
 ///Creates an array with elements that are from the fibonacci
 /// sequence. Takes an argument for how many elements to generate.
-fn fib ( nth_elem: uint ) -> ~[u64] {
+pub fn fib ( nth_elem: uint ) -> ~[u64] {
     assert!(nth_elem >= 2);
     let mut array = ~[0, 1];
     let mut current_elem = 2;       //the third element 
@@ -18,7 +18,7 @@ fn fib ( nth_elem: uint ) -> ~[u64] {
     return array
 }
 
-fn main() {
+pub fn main() {
     
     let args = std::os::args();
 

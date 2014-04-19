@@ -24,29 +24,18 @@ fn kmp_find_string(keychars: &str, data: ~[~str]) -> (bool, uint, uint) {
 
     loop {
         if i >= data.len() { break }  // don't go out of bounds
-        let mut datastring = data[i].clone();
+        let datastring = data[i].clone();
         true_index = 0; //resets to 0 for the beginning of the string
         loop {
-            if keychars.len() > datastring.len() { break }
+            if keychars.len() > datastring.len() || true_index + keychars.len() - 1 >= datastring.len() { break }
             //key can't be in something shorter than it
-            index = compare_chars(keychars.clone(),datastring.clone());
-            if index == keychars.len() { found = true }
-            //ie, it iterated successfully through both strings and the key
-            //exists in the string
-            //need this to return
-            if found == true { break }
-            if index > 2 {
-                datastring = datastring.slice_from(index - 2).to_owned();
-                true_index += index - 2;
+            index = compare_chars(keychars.clone(),datastring.slice(true_index, true_index + keychars.len()));
+            if index == keychars.len() {
+                found = true;
+                break;
             }
-            //this only executes if the key was not in the string;
-            //it cuts off the string up to one character prior to the first
-            //nonmatching character. I probably have wrong arithmatic here, but
-            //this errs on the side of caution.
-            else { 
-                datastring.shift_char();
-                true_index += 1;
-            }
+            if index == 0 { index = 1 }
+            true_index += index;
             //this happens if there was an immediate mismatch (index = 0)
         }
         if found == true { break }

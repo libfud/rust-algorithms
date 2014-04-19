@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The boyer_moore library documentation.">
+
     <title>utils.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400,700'
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../../../main.css">
 
@@ -26,7 +29,6 @@
 
     <nav class="sub">
         <form class="search-form js-only">
-            <button class="do-search">Search</button>
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
@@ -323,6 +325,7 @@
 <span id='285'>285</span>
 <span id='286'>286</span>
 <span id='287'>287</span>
+<span id='288'>288</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//!  Commonly used functions 
 </span>
@@ -511,7 +514,7 @@
 </span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_string_to_float</span>(<span class='ident'>string_orig</span>: <span class='kw-2'>~</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='ident'>f64</span>, <span class='kw-2'>~</span><span class='ident'>str</span>) {
     <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>string_orig</span>.<span class='ident'>trim_left</span>().<span class='ident'>to_owned</span>();
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_chars</span> <span class='op'>=</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>string</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_string</span>: <span class='kw-2'>~</span><span class='ident'>str</span> <span class='op'>=</span> <span class='kw-2'>~</span><span class='string'>&quot;0&quot;</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>float_strbuf</span>: <span class='ident'>StrBuf</span> <span class='op'>=</span> <span class='ident'>StrBuf</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;0&quot;</span>);
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decimal_flag</span> <span class='op'>=</span> <span class='boolval'>false</span>;
     <span class='kw'>loop</span> {
         <span class='kw'>if</span> <span class='ident'>float_chars</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>break</span> }
@@ -522,18 +525,18 @@
         <span class='kw'>if</span>  <span class='ident'>float_chars</span>[<span class='number'>0</span>] <span class='op'>==</span> <span class='string'>&#39;.&#39;</span> {
             <span class='kw'>if</span> <span class='ident'>decimal_flag</span> <span class='op'>==</span> <span class='boolval'>false</span> {
                 <span class='ident'>decimal_flag</span> <span class='op'>=</span> <span class='boolval'>true</span>;
-                <span class='ident'>float_string</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
+                <span class='ident'>float_strbuf</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
                 <span class='ident'>float_chars</span>.<span class='ident'>shift</span>();
             }
             <span class='kw'>else</span> { <span class='kw'>break</span> }
         }
         <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>number_bool</span> <span class='op'>==</span> <span class='boolval'>true</span> {
-            <span class='ident'>float_string</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
+            <span class='ident'>float_strbuf</span>.<span class='ident'>push_char</span>(<span class='ident'>float_chars</span>[<span class='number'>0</span>]);
             <span class='ident'>float_chars</span>.<span class='ident'>shift</span>();
         }
         <span class='kw'>else</span> { <span class='kw'>break</span> }
     }
-    <span class='kw'>let</span> <span class='ident'>float_number</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>(<span class='ident'>float_string</span>) {
+    <span class='kw'>let</span> <span class='ident'>float_number</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>(<span class='ident'>float_strbuf</span>.<span class='ident'>into_owned</span>()) {
         <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='number'>0.0</span>
     };
@@ -552,13 +555,13 @@
 
 <span class='doccomment'>/// Turns an owned vector of chars into an owned string.
 </span><span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_chars_to_string</span>(<span class='ident'>char_string</span>: <span class='kw-2'>~</span>[<span class='ident'>char</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>~</span><span class='ident'>str</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span>: <span class='kw-2'>~</span><span class='ident'>str</span> <span class='op'>=</span> <span class='kw-2'>~</span><span class='string'>&quot;&quot;</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span>: <span class='ident'>StrBuf</span> <span class='op'>=</span> <span class='ident'>StrBuf</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;&quot;</span>);
     <span class='kw'>if</span> <span class='ident'>char_string</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>elem</span> <span class='kw'>in</span> <span class='ident'>char_string</span>.<span class='ident'>iter</span>() {
             <span class='ident'>string</span>.<span class='ident'>push_char</span>(<span class='ident'>elem</span>);
         }
     }
-    <span class='kw'>return</span> <span class='ident'>string</span>;
+    <span class='kw'>return</span> <span class='ident'>string</span>.<span class='ident'>into_owned</span>();
 }
 
 <span class='doccomment'>/// Parses a string in date format into a tuple of three integers for
@@ -567,7 +570,7 @@
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_date</span>(<span class='ident'>string_orig</span>: <span class='kw-2'>~</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='ident'>uint</span>, <span class='ident'>uint</span>, <span class='ident'>uint</span>) {
     <span class='kw'>let</span> <span class='ident'>date_string</span> <span class='op'>=</span> <span class='ident'>string_orig</span>.<span class='ident'>trim_left</span>().<span class='ident'>to_owned</span>();
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date_chars</span> <span class='op'>=</span> <span class='ident'>parse_string_to_chars</span>(<span class='ident'>date_string</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>];<span class='comment'> // an array to represent the day, month, and year.
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>];<span class='comment'> // an array to represent day, month, and year.
     
     </span><span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>date_index</span> <span class='op'>=</span> <span class='number'>0</span>;
 
@@ -596,7 +599,8 @@
             <span class='ident'>temp_array</span>.<span class='ident'>push</span>(<span class='ident'>temp_date_char</span>);
         }
         <span class='kw'>else</span> {
-            <span class='ident'>date</span>[<span class='ident'>date_index</span>] <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>parse_chars_to_string</span>(<span class='ident'>temp_array</span>.<span class='ident'>clone</span>())) {
+            <span class='ident'>date</span>[<span class='ident'>date_index</span>] <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>parse_chars_to_string</span>(
+                <span class='ident'>temp_array</span>.<span class='ident'>clone</span>())) {
                 <span class='prelude-val'>Some</span>(<span class='ident'>num</span>) <span class='op'>=&gt;</span> <span class='ident'>num</span>,
                 _         <span class='op'>=&gt;</span> <span class='number'>0</span>
             };
