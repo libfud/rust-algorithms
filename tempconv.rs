@@ -8,15 +8,19 @@ use common::utils::parse_string_to_float;
 
 pub mod common { pub mod utils; } 
 
-fn fahr_to_cels(fahr: f64) -> f64 {
+/// Converts a temperature from fahrenheit to celsius.
+pub fn fahr_to_cels(fahr: f64) -> f64 {
     return (fahr - 32.0) * 5.0 / 9.0;
 }
 
-fn cels_to_fahr(cels: f64) -> f64 {
+/// Converts a temperature from celsius to fahrenheit.
+pub fn cels_to_fahr(cels: f64) -> f64 {
     return (cels * 9.0 / 5.0) + 32.0;
 }
 
-fn main() {
+/// Takes a floating point number from stdin followed by C or F to show
+/// the scale.
+pub fn main() {
 
     let args = std::os::args();
     
