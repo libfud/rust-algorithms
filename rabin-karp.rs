@@ -23,7 +23,7 @@ pub fn print_usage(program: &str, _opts: &[OptGroup]) {
 /// to indicate if it was found, the index (uint) of the array holding
 /// the string in which it was found, and the index (uint) of that
 /// string at which the matching substring begins.
-pub fn rubin_karp(array: &[~str], key: &str) -> (bool, uint, uint) {
+pub fn rubin_karp(array: Vec<~str>, key: &str) -> (bool, uint, uint) {
     let mut index = 0u;
     let mut found = false;
     let mut str_index = 0u;
@@ -34,7 +34,7 @@ pub fn rubin_karp(array: &[~str], key: &str) -> (bool, uint, uint) {
     
     loop {
         if index >= array.len() { break }
-        let string_i = array[index].clone();
+        let string_i = array.as_slice()[index].clone();
         str_index = 0;
 
         loop { 

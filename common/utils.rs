@@ -7,6 +7,7 @@ use self::rand::distributions::{Range, IndependentSample};
 use self::collections::HashMap;
 use std::io;
 use std::io::{File, BufferedReader, Open, Read};
+use std::from_str::FromStr;
 
 ///generic linear search
 ///For any type which allows binary comparisons, it iterates through
@@ -91,10 +92,11 @@ pub fn float_getter(question: &str) -> f64 {
 /// times the number of elements requested. For example, if you
 /// request 10 elements and specify an upper bound of 2, you will get
 /// 10 numbers ranging in size from 1 to 20.
-pub fn array_gen(size: uint, upper_bound: uint) -> ~[uint] {
+pub fn array_gen(size: uint, upper_bound: uint) -> Vec<uint> {
     let range = Range::new(1, size * upper_bound);
     let mut rng = task_rng();
-    let mut array: ~[uint] = ~[];
+    let mut array: Vec<uint> = vec!(size);
+    array.shift();
     let mut i = 0;
     while i < size {
         array.push(range.ind_sample(&mut rng));
@@ -106,13 +108,16 @@ pub fn array_gen(size: uint, upper_bound: uint) -> ~[uint] {
 
 /// Facilitates getting data from files in the form of an array
 /// of strings, each string consisting of one line from the file.
-pub fn array_from_file(strpath: &str) -> ~[~str] {
+pub fn array_from_file(strpath: &str) -> Vec<~str> {
+
+    let badresult: Vec<~str> = vec!{~"nothing"};
     let path = Path::new(strpath);
     if path.exists() == false {
         println!("Invalid filename");
-        return ~[~"nothing"];
+        return badresult;
     }
-    let mut lines: ~[~str] = ~[];
+    let mut lines: Vec<~str> = badresult;
+    lines.shift();
 
     let file = match File::open_mode(&path, Open, Read) {
         Ok(f) => f,
@@ -128,56 +133,50 @@ pub fn array_from_file(strpath: &str) -> ~[~str] {
     return lines;
 }
 
-/// Uses array from file to return an array of integers. This
-/// needs some more work.
-pub fn int_array_from_file(strpath: &str) -> ~[int] {
+/// Creates an array of type T that implements Ord (ie floats and integers)
+pub fn number_array_from_file<T: Ord + FromStr + Clone>(strpath: &str,
+    flag: T) -> Vec<T> {
     let lines = array_from_file(strpath);
-    let size = lines.len();
-    let mut i = 0;
-    let mut array: ~[int] = ~[];
-    while i < size {
-        let numstr = &lines[i];
-        let num = from_str::<int>(numstr.slice_to(numstr.len() - 1));
-        let number: int = match num {
-            Some(num) => num,
-            None => 0
+    let mut number_vector: Vec<T> = vec!(flag.clone());
+    number_vector.shift();
+    for line in lines.iter() {
+        let num = from_str::<T>(line.slice_to(line.len() - 1));
+        let number: T = match num {
+            Some(num)   => num,
+            None        => flag.clone(),
         };
-        array.push(number);
-        i+=1;
+        number_vector.push(number);
     }
-    return array;
+    return number_vector;
 }
 
-pub fn uint_array_from_file(strpath: &str) -> ~[uint] {
-    let lines = array_from_file(strpath);
-    let mut array: ~[uint] = ~[];
-    for elem in lines.iter() {
-        let number = match from_str::<uint>(elem.slice_to(elem.len() - 1)) {
-            Some(num) => num,
-            None      => 0,
-        };
-        array.push(number)
-    }
-    return array;
+/// Uses array from file to return an array of integers. This
+/// needs some more work.
+pub fn int_array_from_file(strpath: &str) -> Vec<int> {
+    return number_array_from_file(strpath, 0i);
+}
+
+pub fn uint_array_from_file(strpath: &str) -> Vec<uint> {
+    return number_array_from_file(strpath, 0u);
 }
 
 /// Uses array_from_file and parse_string_to_chars and parse_string_to_float
 /// to return two vectors from a file: one of floating point numbers, and
 /// another of owned strings. 
-pub fn float_array_from_file(strpath: &str) -> (~[f64],~[~str]) {
+pub fn float_array_from_file(strpath: &str) -> (Vec<f64>, Vec<~str>) {
     let lines = array_from_file(strpath);
-    let size = lines.len();
-    let mut i = 0;
-    let mut float_array: ~[f64] = ~[];
-    let mut string_array: ~[~str] = ~[];
-    while i < size {
-        let numstr = lines[i].trim_left().to_owned();
+    let mut float_vec: Vec<f64> = vec!(0.0);
+    let mut string_vec: Vec<~str> = vec!(~"nothing");
+    float_vec.shift();
+    string_vec.shift();
+
+    for line in lines.iter() {
+        let numstr = line.trim_left().to_owned();
         let (number, rest_of_string) = parse_string_to_float(numstr);
-        float_array.push(number);
-        string_array.push(rest_of_string);
-        i+=1;
+        float_vec.push(number);
+        string_vec.push(rest_of_string);
     }
-    return (float_array, string_array);
+    return (float_vec, string_vec);
 }
 
 /// Takes an owned string and returns a floating point numbger
@@ -189,20 +188,20 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
     let mut decimal_flag = false;
     loop {
         if float_chars.len() == 0 { break }
-        let number_bool = match float_chars[0] {
+        let number_bool = match float_chars.as_slice()[0] {
             '0'..'9'|'.' => true,
             _ => false
         };
-        if  float_chars[0] == '.' {
+        if  float_chars.as_slice()[0] == '.' {
             if decimal_flag == false {
                 decimal_flag = true;
-                float_strbuf.push_char(float_chars[0]);
+                float_strbuf.push_char(float_chars.as_slice()[0]);
                 float_chars.shift();
             }
             else { break }
         }
         else if number_bool == true {
-            float_strbuf.push_char(float_chars[0]);
+            float_strbuf.push_char(float_chars.as_slice()[0]);
             float_chars.shift();
         }
         else { break }
@@ -216,8 +215,9 @@ pub fn parse_string_to_float(string_orig: ~str) -> (f64, ~str) {
 }
 
 /// Turns an owned string into a vector of chars.
-pub fn parse_string_to_chars(string: &str) -> ~[char] {
-    let mut char_string: ~[char] = ~[];
+pub fn parse_string_to_chars(string: &str) -> Vec<char> {
+    let mut char_string: Vec<char> = vec!('0');
+    char_string.shift();
     for char_elem in string.chars() {
         char_string.push(char_elem);
     }
@@ -225,7 +225,7 @@ pub fn parse_string_to_chars(string: &str) -> ~[char] {
 }
 
 /// Turns an owned vector of chars into an owned string.
-pub fn parse_chars_to_string(char_string: ~[char]) -> ~str {
+pub fn parse_chars_to_string(char_string: Vec<char>) -> ~str {
     let mut string: StrBuf = StrBuf::from_str("");
     if char_string.len() > 0 {
         for &elem in char_string.iter() {
@@ -256,9 +256,10 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
         println!("Invalid!");
         return (0,0,0);
     }
-    let mut temp_array: ~[char] = ~[];
+    let mut temp_array: Vec<char> = vec!('0');
+    temp_array.shift();
     while date_chars.len() > 0 { 
-        let date_scope_flag = match date_chars[0] {
+        let date_scope_flag = match date_chars.as_slice()[0] {
             '0'..'9'=> false,
             _       => true
         };
@@ -275,7 +276,7 @@ pub fn parse_date(string_orig: ~str) -> (uint, uint, uint) {
                 Some(num) => num,
                 _         => 0
             };
-            temp_array = ~[];
+            temp_array.clear();
             if date_chars.len() > 0 { date_chars.shift(); }
             date_index += 1;
         }
