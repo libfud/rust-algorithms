@@ -23,17 +23,15 @@ pub mod common {
 /// binary operators like > and < (Ord), is sendable for channels (Send), and
 /// showable with println! (Show). Also takes a number of sub arrays as a power
 /// of two to split the array into. Returns a sorted array of the same type T.
-pub fn merge_sort_parallel<T: Clone + Ord + Send>(mut array: ~[T]) -> ~[T] {
+pub fn merge_sort_parallel<T: Clone + Ord + Send>(mut array: Vec<T>)
+    -> Vec<T> {
 
     let config = PoolConfig::new();
     let mut pool = SchedPool::new(config);
     // setting up the scheduling pool for handles to threads
 
     let array_refs = split(array);
-    let mut sorted_subarrays = ~[~[array[0].clone()]];
-    // initializes the sorted_split array
-    sorted_subarrays.shift();
-    //remove that initializer value
+    let mut sorted_subarrays : Vec<Vec<T>> = Vec::new();
     let length = array_refs.len();
 
     let (tx, rx): (Sender<~[T]>, Receiver<~[T]>) = channel();
@@ -44,7 +42,7 @@ pub fn merge_sort_parallel<T: Clone + Ord + Send>(mut array: ~[T]) -> ~[T] {
     while i < length {
         let mut handle = pool.spawn_sched();
         //create a new handle
-        let (subarray_begin, subarray_end) = array_refs[0];
+        let (subarray_begin, subarray_end) = array_refs.as_slice()[0];
         let subarray_unsort = array.slice(subarray_begin,
             subarray_end + 1).to_owned();
         let child_tx = tx.clone();
@@ -114,7 +112,7 @@ pub fn merge_wrapper<T: Ord + Clone + Send>(mut array_array: ~[~[T]]) -> ~[~[T]]
 /// Takes an array of type T which can be Cloned, and the number of subarrays
 /// for it to be broken into. Returns an array of tuples of uints for the array
 /// to be split into.
-pub fn split<T: Clone>(array: &[T]) -> ~[(uint, uint)] {
+pub fn split<T: Clone>(array: Vec<T>) -> ~[(uint, uint)] {
 
     let mut number_of_sub_arrays = 1;
     loop {

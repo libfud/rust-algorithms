@@ -52,7 +52,7 @@ pub fn main() {
         _               => ~"INVALID"
     };
 
-    let (found, index, true_index) = boyer_moore(array, key);
+    let (found, index, true_index) = boyer_moore(array.slice_from(0), key);
 
     println!("{} {} {}", found, index, true_index);
 

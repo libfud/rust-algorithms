@@ -1,7 +1,5 @@
 //! Sorting functions
 
-use std::slice::from_elem;
-
 /// Insertion sort takes an array of type T which has the Ord and Clone
 /// traits. Returns an array of type T that has been sorted. It has two 
 /// loops, one nested in the other. The outer loop sets an immutable 
@@ -14,23 +12,23 @@ use std::slice::from_elem;
 /// termination condition of the inner while loop. After the termination
 /// of the inner loop, the element to the right of the jth element is
 /// assigned the value of val, and i increments.
-pub fn insertion_sort<T: Ord + Clone>(array_orig: ~[T]) -> ~[T] {
-    if array_orig.len() <= 1 { return array_orig.to_owned() }
+pub fn insertion_sort<T: Ord + Clone>(array_orig: Vec<T>) -> Vec<T> {
+    if array_orig.len() <= 1 { return array_orig }
 
     let mut array = array_orig.clone();
     let mut i = 1u;
     while i < array.len() {
-        let val = array[i].clone();
+        let val = array.as_slice()[i].clone();
         let mut j = i - 1;
-        while j + 1 != 0 && array[j] > val {
-            array[j+1] = array[j].clone();
+        while j + 1 != 0 && array.as_slice()[j] > val {
+            array.as_mut_slice()[j+1] = array.as_slice()[j].clone();
             j -= 1;
         }
-        array[j+1] = val; //done because of the loop termination
+        array.as_mut_slice()[j+1] = val; //done because of the loop termination
         i += 1;
     }
 
-    return array.to_owned()
+    return array
 }
 
 /// Selection sort takes an array of type T which has the Ord and Clone 
@@ -44,25 +42,29 @@ pub fn insertion_sort<T: Ord + Clone>(array_orig: ~[T]) -> ~[T] {
 /// smallest element are swapped, provided they actually differ. i is then
 /// incremented, and the outer loop proceeds in this fashion until every
 /// element has been examined.
-pub fn selection_sort<T: Ord + Clone>(array_orig: ~[T]) -> ~[T] {
+pub fn selection_sort<T: Ord + Clone>(array_orig: Vec<T>) -> Vec<T> {
     let mut array = array_orig.clone();
     let mut i = 0;
 
     while i < array.len() - 1 {
-
         let mut j = i;
         let mut min_index = j;
 
         while j < array.len() - 1 {
-
             j += 1;
-            if array[j] < array[min_index] { min_index = j }
-
+            if array.as_slice()[j] < array.as_slice()[min_index] {
+                min_index = j
+            }
         }
 
-        if array[min_index] < array[i] { array.swap(i, min_index) }
-        i += 1;
+        if array.as_slice()[min_index] < array.as_slice()[i] {
+            let placeholder = array.as_slice()[i].clone();
+            let second_holder = array.as_slice()[min_index].clone();
+            array.as_mut_slice()[i] = second_holder;
+            array.as_mut_slice()[min_index] = placeholder;
+        }
 
+        i += 1;
     }
 
     return array
@@ -81,17 +83,17 @@ pub fn selection_sort<T: Ord + Clone>(array_orig: ~[T]) -> ~[T] {
 /// with insertion sort, and merged. This will be repeated for the other
 /// array holding 64 elements, and then these two sorted arrays will
 /// be merged and returned.
-pub fn merge_sort<T: Ord + Clone>(array: ~[T], mut min_size: uint) -> ~[T] {
+pub fn merge_sort<T: Ord + Clone>(array: Vec<T>, mut min_size: uint) -> Vec<T> {
     if min_size < 1 {
         println!("{} is an invalid minimum size. Using 1.", min_size);
         min_size = 1;
     }
     let length = array.len();
-    if length <= min_size { return insertion_sort(array.to_owned()) }
+    if length <= min_size { return insertion_sort(array) }
 
     let middle = length / 2;
-    let mut left = array.slice(0, middle).to_owned();
-    let mut right = array.slice(middle, length).to_owned();
+    let mut left = Vec::from_slice(array.slice(0, middle));
+    let mut right = Vec::from_slice(array.slice(middle, length));
 
     left = merge_sort(left, min_size);
     right = merge_sort(right, min_size);
@@ -108,25 +110,24 @@ pub fn merge_sort<T: Ord + Clone>(array: ~[T], mut min_size: uint) -> ~[T] {
 /// its first element pushed onto the result and be shifted. Note that
 /// this behavior is dependent on the arrays already being sorted, either
 /// by previous merges or by another method of sorting.
-pub fn merge<T: Ord + Clone>(left_orig: ~[T], right_orig: ~[T]) -> ~[T] {
-    let mut left = left_orig.clone();
-    let mut right = right_orig.clone();
-    let mut result: ~[T] = from_elem(0, left[0].clone());
+pub fn merge<T: Ord + Clone>(mut left: Vec<T>, mut right: Vec<T>) -> Vec<T> {
+
+    let mut result: Vec<T> = Vec::new();
 
     while left.len() > 0 || right.len() > 0 {
         if left.len() > 0 && right.len() > 0 {
-            if left[0] < right[0] { 
-                result.push(left[0].clone());
+            if left.as_slice()[0] < right.as_slice()[0] { 
+                result.push(left.as_slice()[0].clone());
                 left.shift();
             } else { 
-                result.push(right[0].clone());
+                result.push(right.as_slice()[0].clone());
                 right.shift();
             }
         } else if  left.len() > 0 { 
-            result.push(left[0].clone());
+            result.push(left.as_slice()[0].clone());
             left.shift();
         } else {
-            result.push(right[0].clone());
+            result.push(right.as_slice()[0].clone());
             right.shift();
         }
     }
