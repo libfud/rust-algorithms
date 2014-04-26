@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The merge_sort library documentation.">
+
+    <title>merge_sort::common::sort::insertion_sort - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+
+        <p class='location'><a href='../../index.html'>merge_sort</a>&#8203;::<a href='../index.html'>common</a>&#8203;::<a href='index.html'>sort</a></p><div class='block fn'><h2>Functions</h2><a class='fn current' href='fn.insertion_sort.html'>insertion_sort</a><br/><a class='fn ' href='fn.merge.html'>merge</a><br/><a class='fn ' href='fn.merge_sort.html'>merge_sort</a><br/><a class='fn ' href='fn.selection_sort.html'>selection_sort</a><br/></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Search documentation..."
+                       type="search" />
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content fn">
+<h1 class='fqn'>Function <a href='../../index.html'>merge_sort</a>::<a href='../index.html'>common</a>::<a href='index.html'>sort</a>::<a class='fn' href=''>insertion_sort</a><a class='source'href='../../../src/merge_sort/common/sort.rs.html#17-34'>[src]</a></h1>
+<pre class='rust fn'>pub fn insertion_sort&lt;T: <a class='trait' href='http://static.rust-lang.org/doc/master/std/cmp/trait.Ord.html' title='std::cmp::Ord'>Ord</a> + <a class='trait' href='http://static.rust-lang.org/doc/master/std/clone/trait.Clone.html' title='std::clone::Clone'>Clone</a>&gt;(array_orig: ~[T]) -&gt; ~[T]</pre><div class='docblock'><p>Insertion sort takes an array of type T which has the Ord and Clone
+traits. Returns an array of type T that has been sorted. It has two 
+loops, one nested in the other. The outer loop sets an immutable 
+variable, val, to the value of the ith index and sets a mutable variable 
+j to the value of i - 1. The inner loop executes while j +1 != 0
+the length of the array and while the value of the jth element is 
+greater than the value of val, and sets the value of the element to
+the &quot;right&quot; of j to the value of the jth element. j is then decremented.
+When j is equal to zero and decrments, it will fulfill the first
+termination condition of the inner while loop. After the termination
+of the inner loop, the element to the right of the jth element is
+assigned the value of val, and i increments.</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&uarr;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&darr;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        var rootPath = "../../../";
+        var currentCrate = "merge_sort";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script async src="../../../search-index.js"></script>
+</body>
+</html>

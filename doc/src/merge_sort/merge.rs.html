@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The merge_sort library documentation.">
+
     <title>merge.rs.html -- source</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../merge_sort/main.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
 </head>
@@ -26,7 +29,6 @@
 
     <nav class="sub">
         <form class="search-form js-only">
-            <button class="do-search">Search</button>
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
@@ -105,15 +107,28 @@
 <span id='67'>67</span>
 <span id='68'>68</span>
 <span id='69'>69</span>
-</pre><pre class='rust'>#[crate_id = &quot;merge_sort&quot;];
-#[crate_type = &quot;bin&quot;];
+<span id='70'>70</span>
+<span id='71'>71</span>
+<span id='72'>72</span>
+<span id='73'>73</span>
+<span id='74'>74</span>
+<span id='75'>75</span>
+<span id='76'>76</span>
+<span id='77'>77</span>
+<span id='78'>78</span>
+<span id='79'>79</span>
+</pre><pre class='rust '>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_id</span> <span class='op'>=</span> <span class='string'>&quot;merge_sort&quot;</span>]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;bin&quot;</span>]</span>
 
-//! An implementation of merge sort.
+<span class='doccomment'>//! An implementation of merge sort.
+</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>common</span>{ 
+    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>utils</span>;
+    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>sort</span>;
+}<span class='comment'>
 
-use std::vec;
-
-pub mod common{ pub mod utils; }
-
+/*
 ///Merge_sort will recursively split an array into two subarrays until
 /// each has a length of 1 element.
 fn merge_sort(array: ~[int]) -&gt; ~[int] {
@@ -159,32 +174,34 @@ fn merge(left_orig: ~[int], right_orig: ~[int]) -&gt; ~[int] {
 
     return result;
 }
+*/
 
 
-fn main() {
-    let args = std::os::args();
-    if args.len() &lt; 2 {
-        println(&quot;I need a filename.&quot;);
-        return;
+</span><span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>args</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>min_size</span> <span class='op'>=</span> <span class='number'>1</span>;
+    <span class='kw'>if</span> <span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='number'>2</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;I need a filename.&quot;</span>);
+        <span class='kw'>return</span>;
     }
-    let pathname = args[1].to_owned();
-    let unsorted_array = common::utils::int_array_from_file(pathname);
-    let sorted_array = merge_sort(unsorted_array.clone());
-    for &amp;elem in sorted_array.iter() {
-        println!(&quot;{}&quot;,elem);
+    <span class='kw'>if</span> <span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>2</span> {
+        <span class='ident'>min_size</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>uint</span><span class='op'>&gt;</span>(<span class='ident'>args</span>[<span class='number'>2</span>]) {
+            <span class='prelude-val'>Some</span>(<span class='ident'>num</span>)   <span class='op'>=&gt;</span> <span class='ident'>num</span>,
+            _           <span class='op'>=&gt;</span> <span class='number'>1</span>
+        };
     }
+    <span class='kw'>let</span> <span class='ident'>pathname</span> <span class='op'>=</span> <span class='ident'>args</span>[<span class='number'>1</span>].<span class='ident'>to_owned</span>();
+    <span class='kw'>let</span> <span class='ident'>unsorted_array</span> <span class='op'>=</span> <span class='ident'>common</span>::<span class='ident'>utils</span>::<span class='ident'>int_array_from_file</span>(<span class='ident'>pathname</span>);
+    <span class='kw'>let</span> <span class='ident'>sorted_array</span> <span class='op'>=</span> <span class='ident'>common</span>::<span class='ident'>sort</span>::<span class='ident'>merge_sort</span>(<span class='ident'>unsorted_array</span>.<span class='ident'>clone</span>(), 
+        <span class='ident'>min_size</span>);
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>sorted_array</span>[<span class='ident'>sorted_array</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span> ]);
 }
-</pre></section>
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../";
-    </script>
-    <script src="../../merge_sort/jquery.js"></script>
-    <script src="../../merge_sort/search-index.js"></script>
-    <script src="../../merge_sort/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -216,5 +233,13 @@ fn main() {
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../";
+        var currentCrate = "merge_sort";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>

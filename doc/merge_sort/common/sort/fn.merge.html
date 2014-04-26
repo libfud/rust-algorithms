@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The merge_sort library documentation.">
+
+    <title>merge_sort::common::sort::merge - Rust</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+
+    
+</head>
+<body>
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    <section class="sidebar">
+        
+
+        <p class='location'><a href='../../index.html'>merge_sort</a>&#8203;::<a href='../index.html'>common</a>&#8203;::<a href='index.html'>sort</a></p><div class='block fn'><h2>Functions</h2><a class='fn ' href='fn.insertion_sort.html'>insertion_sort</a><br/><a class='fn current' href='fn.merge.html'>merge</a><br/><a class='fn ' href='fn.merge_sort.html'>merge_sort</a><br/><a class='fn ' href='fn.selection_sort.html'>selection_sort</a><br/></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Search documentation..."
+                       type="search" />
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content fn">
+<h1 class='fqn'>Function <a href='../../index.html'>merge_sort</a>::<a href='../index.html'>common</a>::<a href='index.html'>sort</a>::<a class='fn' href=''>merge</a><a class='source'href='../../../src/merge_sort/common/sort.rs.html#111-135'>[src]</a></h1>
+<pre class='rust fn'>pub fn merge&lt;T: <a class='trait' href='http://static.rust-lang.org/doc/master/std/cmp/trait.Ord.html' title='std::cmp::Ord'>Ord</a> + <a class='trait' href='http://static.rust-lang.org/doc/master/std/clone/trait.Clone.html' title='std::clone::Clone'>Clone</a>&gt;(left_orig: ~[T], right_orig: ~[T]) -&gt; ~[T]</pre><div class='docblock'><p>Merge takes two arrays of type T which implements the traits Ord and
+Clone, and returns an array of a size equal to the sum of the sizes
+of the arrays passed to it. While each array holds elements, the first
+element from each is compared, and the lesser of the two will be
+pushed onto a result array, and the first element will shifted from
+the array. Else, whichever array holds elements will successively have
+its first element pushed onto the result and be shifted. Note that
+this behavior is dependent on the arrays already being sorted, either
+by previous merges or by another method of sorting.</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&uarr;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&darr;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        var rootPath = "../../../";
+        var currentCrate = "merge_sort";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script async src="../../../search-index.js"></script>
+</body>
+</html>

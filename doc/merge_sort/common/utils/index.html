@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The merge_sort library documentation.">
+
     <title>merge_sort::common::utils - Rust</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald:700|Inconsolata:400'
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../../../merge_sort/main.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
 
     
 </head>
@@ -21,12 +24,11 @@
     <section class="sidebar">
         
 
-        <p class='location'><a href='../../index.html'>merge_sort</a>&#8203;::<a href='../index.html'>common</a></p><div class='block mod'><h2>Modules</h2><a class='mod current' href='../utils/index.html'>utils</a><br/></div>
+        <p class='location'><a href='../../index.html'>merge_sort</a>&#8203;::<a href='../index.html'>common</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='../sort/index.html'>sort</a><br/><a class='mod current' href='../utils/index.html'>utils</a><br/></div>
     </section>
 
     <nav class="sub">
         <form class="search-form js-only">
-            <button class="do-search">Search</button>
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
@@ -36,9 +38,10 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod"><a class='source'
-                       href='../../../src/merge_sort/merge.rs.html#8'>[src]</a><h1 class='fqn'>Module <a href='../../index.html'>merge_sort</a>::<a href='../index.html'>common</a>::<a class='mod' href=''>utils</a></h1><div class='docblock'><p>Commonly used functions</p>
-</div><h2>Functions</h2>
+    <section id='main' class="content mod">
+<h1 class='fqn'>Module <a href='../../index.html'>merge_sort</a>::<a href='../index.html'>common</a>::<a class='mod' href=''>utils</a><a class='source'href='../../../src/merge_sort/merge.rs.html#7'>[src]</a></h1>
+<div class='docblock'><p>Commonly used functions</p>
+</div><h2 id='functions' class='section-link'><a href="#functions">Functions</a></h2>
 <table>
                     <tr>
                         <td><a class='fn' href='fn.answer_to_bool.html'
@@ -58,11 +61,19 @@ of strings, each string consisting of one line from the file.</p>
                     <tr>
                         <td><a class='fn' href='fn.array_gen.html'
                                title='merge_sort::common::utils::array_gen'>array_gen</a></td>
-                        <td class='docblock short'><p>Geneerates an array with the number of elements specified by size.
+                        <td class='docblock short'><p>Generates an array with the number of elements specified by size.
 Upper bound limits the size of the numbers generated to itself
 times the number of elements requested. For example, if you
 request 10 elements and specify an upper bound of 2, you will get
 10 numbers ranging in size from 1 to 20.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.check_args.html'
+                               title='merge_sort::common::utils::check_args'>check_args</a></td>
+                        <td class='docblock short'><p>Checks arguments against a set of required arguments, returns a bool
+and a hashmap of the arguments</p>
 </td>
                     </tr>
                 
@@ -91,9 +102,12 @@ needs some more work.</p>
                     </tr>
                 
                     <tr>
-                        <td><a class='fn' href='fn.number_getter.html'
-                               title='merge_sort::common::utils::number_getter'>number_getter</a></td>
-                        <td class='docblock short'><p>Takes user input and returns an integer.</p>
+                        <td><a class='fn' href='fn.linear_search.html'
+                               title='merge_sort::common::utils::linear_search'>linear_search</a></td>
+                        <td class='docblock short'><p>generic linear search
+For any type which allows binary comparisons, it iterates through
+the array and returns a boolean  for whether or not the key
+was found, and if true returns the element at which it was found.</p>
 </td>
                     </tr>
                 
@@ -133,17 +147,16 @@ and an owned string, if possible.</p>
                         <td class='docblock short'><p>Returns a string in response to a question.</p>
 </td>
                     </tr>
+                
+                    <tr>
+                        <td><a class='fn' href='fn.uint_array_from_file.html'
+                               title='merge_sort::common::utils::uint_array_from_file'>uint_array_from_file</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
                 </table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
-
-    <script>
-        var rootPath = "../../../";
-    </script>
-    <script src="../../../merge_sort/jquery.js"></script>
-    <script src="../../../merge_sort/search-index.js"></script>
-    <script src="../../../merge_sort/main.js"></script>
 
     <div id="help" class="hidden">
         <div class="shortcuts">
@@ -175,5 +188,13 @@ and an owned string, if possible.</p>
             </p>
         </div>
     </div>
+
+    <script>
+        var rootPath = "../../../";
+        var currentCrate = "merge_sort";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script async src="../../../search-index.js"></script>
 </body>
 </html>
