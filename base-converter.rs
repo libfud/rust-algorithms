@@ -5,18 +5,18 @@
 //!binary, decimal and hexidecimal.
 
 extern crate collections;
+extern crate getopts;
 
 use std::os;
 use collections::hashmap::HashMap;
+use getopts::{reqopt, getopts, optopt};
 
-pub fn base_m_to_base_n(number_orig: &str, base_m: uint,
+pub fn base_m_to_base_n(number: &str, base_m: uint,
     base_n: uint, word_length: uint) -> ~str {
 
-    let mut number: ~str  = number_orig.to_owned();
+    let mut prefix = 0;
 
-    if base_m == 10 && number.len() > 2 && number.slice(1,2) != "d" {
-        number = "0d" + number_orig;
-    }
+    if base_m != 10 { prefix = 2 }
 
     if base_n < 2 || base_n > 256 { return ~"Invalid base!" }
 
@@ -69,7 +69,7 @@ pub fn base_m_to_base_n(number_orig: &str, base_m: uint,
 
     let mut place_val = 1;
     let mut total_val = 0;
-    for c in number.slice_from(2).chars() {
+    for c in number.slice_from(prefix).chars_rev() {
         match character_table.find(&c) {
             Some(value) => {
                 total_val += place_val * *value;
@@ -104,7 +104,18 @@ fn main() {
 
     let args = os::args();
 
-    let mut word_length = 8;
+    let opts = [
+        reqopt("f", "from", "original base", "BASE VALUE"),
+        reqopt("t", "to", "new base", "BASE VALUE"),
+        reqopt("i", "input-number", "original number", "FORMATTED NUMBER"),
+        optopt("p", "pretty", "word length", "VALUE")
+    ];
+
+    let matches = match getopts(args.tail(), opts) {
+        Ok(m)   => { m },
+        Err(f)  => { fail!(f.to_err_msg()) }
+    };
+
 
     if args.len() < 4 { 
         println!("At least two numbers are required.");
@@ -112,8 +123,10 @@ fn main() {
     }
 
     let mut base_m;
-
-    match from_str::<uint>(args[2]) {
+    match from_str::<uint>(match matches.opt_str("f") {
+            Some(string)    => string,
+            _               => ~"10"
+        }) {
         Some(num)   => { base_m = num },
         _           => {
             println!("You shouldn't have done such a thing.");
@@ -122,8 +135,10 @@ fn main() {
     }
 
     let mut base_n;
-
-    match from_str::<uint>(args[3]) {
+    match from_str::<uint>(match matches.opt_str("t"){
+            Some(string)    => string,
+            _               => ~"16"
+        }) {
         Some(num)   => { base_n = num },
         _           => {
             println!("You shouldn't have done such a thing.");
@@ -131,14 +146,31 @@ fn main() {
         }
     }
 
-    if args.len() > 4 {
-        match from_str::<uint>(args[4]) {
-            Some(num)   => { word_length = num },
-            _           => { }
+    let mut word_length = 8;
+    if matches.opt_present("p") {
+        match from_str::<uint>(
+            match matches.opt_str("p") {
+                Some(string)    => string,
+                _               => ~"Invalid"
+            })  {
+                Some(num)   => { word_length = num },
+                _           => {
+                    println!("Bad pretty value.");
+                    return
+                }
         }
     }
 
-    let rebased = base_m_to_base_n(args[1], base_m, base_n, word_length);
+    let mut input_num;
+    match matches.opt_str("i") {
+        Some(string)    => { input_num = string }
+        _               => { 
+            println!("No");
+            return
+        }
+    }
+
+    let rebased = base_m_to_base_n(input_num, base_m, base_n, word_length);
 
     println!("{}", rebased);
 
