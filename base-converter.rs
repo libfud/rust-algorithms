@@ -41,12 +41,13 @@ static char_array : &'static [char] = &'static [
     '也', '亡', '光', '猫', '犬', '具'
 ];
 
+static max_size: uint = !0;
+
 static bad_format_str: &'static str = 
     "Badly formatted number or bad value for base. Returning 0 in decimal.";
 
 /// Check that an input number is properly formatted for its base
 pub fn check_sanity(number: &str, base_m: uint, base_n: uint) -> bool {
-    //FIXME incorporate more checks, this just checks if it has a prefix or not
     if base_m != 10 {
         if number.slice_to(1) != "0" {
             return false;
@@ -61,6 +62,28 @@ pub fn check_sanity(number: &str, base_m: uint, base_n: uint) -> bool {
     if base_n < 2 || base_n > 256 || base_m < 2 || base_m > 256 {
         return false
     }
+
+    let prefix = match base_m {
+        10  => 0,
+        _   => 2,
+    };
+    let mut allowed_len = 1;
+    let mut max_possible = base_m - 1;
+    loop {
+        allowed_len += 1;
+        if max_size / base_m + max_size % base_m < max_possible { break }
+        max_possible += 1;
+        max_possible = max_possible * base_m - 1;
+    }
+
+    let mut total_len = 0;
+    for c in number.slice_from(prefix).chars() {
+        match c {
+            ' '|'_'|',' => { },
+            _           => { total_len += 1 }
+        }
+    }
+    if total_len > allowed_len { return false }
 
     return true;
 }
@@ -80,7 +103,7 @@ pub fn conv_string_to_int(number: &str, base_m: uint, is_positive: bool,
                 place_val *= base_m;
             },
             None        => {
-                if c != ' ' { return (total_val, c) }
+                if c != ' ' && c != ',' && c!= '_' { return (total_val, c) }
             }
         }
     }
@@ -314,10 +337,6 @@ fn main() {
     let rebased = base_m_to_base_n_uint(
         input_num, base_m, base_n, word_length
     );
-    let other_base = base_m_to_base_n_signed_int(
-        input_num, base_m, base_n, word_length
-    );
 
     println!("{}", rebased);
-    println!("{}", other_base);
 }
