@@ -67,14 +67,16 @@ pub fn check_sanity(number: &str, base_m: usize, base_n: usize) -> bool {
         10  => 0,
         _   => 2,
     };
-    let max_binary = std::mem::size_of::<usize>() * 8; //2^64
-    let mut max_possible = 8; //256^8 == 2^64
+//    let max_binary = std::mem::size_of::<usize>() * 8; //2^64
+/*    let mut max_possible = 8; //256^8 == 2^64
     for x in 1..max_binary {
         if base_m.pow(x as u32) >= std::usize::MAX/ base_m {
             max_possible = x;
             break;
         }
     };
+     */
+    let max_possible = (std::usize::MAX as f64).log(base_m as f64).floor() as usize;
     println!("Maximum length of base is {}", max_possible);
     let total_len: usize = number[prefix..].chars().fold(0, |acc, c| {
         match c {
@@ -215,9 +217,9 @@ pub fn usize_from_opt(param: &str, default_val: &str, matches: &Matches) -> usiz
         _               => default_val.to_string()
     };
     let number = match usize::from_str(&num_str) {
-        Ok(num)   => { number = num },
-        _         => { number = 0 },
-    }
+        Ok(num)   => num,
+        _         => 0
+    };
     return number
 }
 
