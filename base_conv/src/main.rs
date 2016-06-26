@@ -40,10 +40,13 @@ static CHAR_ARRAY : [char; 256] = [
     '也', '亡', '光', '猫', '犬', '具'
 ];
 
-static BAD_FORMAT_STR: &'static str = 
+static BAD_FORMAT: &'static str = 
     "Badly formatted number or bad value for base. Returning 0 in decimal.";
 
-/// Check that an input number is properly formatted for its base
+/// Check that an input number is properly formatted for its base.
+/// base_m is the input base, base_n is the output base, number
+/// is what the user has input. For non decimal numbers, a 2 character
+/// prefix is expected which is followed by at least 1 digit of the number.
 pub fn check_sanity(number: &str, base_m: usize, base_n: usize) -> bool {
     if base_m != 10 { //decimal, usually not prefixed
         if &number[..1] != "0" || number.len() < 3 { //prefix & 1st digit
@@ -64,7 +67,7 @@ pub fn check_sanity(number: &str, base_m: usize, base_n: usize) -> bool {
         10  => 0,
         _   => 2,
     };
-    let max_binary = std::mem::size_of::<usize>() * 8;
+    let max_binary = std::mem::size_of::<usize>() * 8; //2^64
     let mut max_possible = 8; //256^8 == 2^64
     for x in 1..max_binary {
         if base_m.pow(x as u32) >= std::usize::MAX/ base_m {
@@ -126,9 +129,9 @@ pub fn conv_string_to_int(number: &str, base_m: usize, is_positive: bool,
 pub fn base_m_to_base_n_usize(number: &str,base_m: usize, base_n: usize,
                               word_length: usize) -> String {
 
-    if check_sanity(number, base_m, base_n) == false {
-        println!("{}", BAD_FORMAT_STR);
-        return "0".to_owned();
+    if !check_sanity(number, base_m, base_n) {
+        println!("{}", BAD_FORMAT);
+        return "0".to_string();
     }
 
     let (pretty_char, prefix, word_length, base_n_prefix) = 
@@ -147,7 +150,7 @@ pub fn base_m_to_base_n_usize(number: &str,base_m: usize, base_n: usize,
     let (mut total_val, bad_char) = conv_string_to_int(
         &number[prefix..], base_m, true, character_table
     );
-    if bad_char!= '0' { return bad_char_fail(bad_char) };
+    if bad_char != '0' { return bad_char_fail(bad_char) };
 
     let mut reverse_base_n_str = String::new();
 
@@ -181,16 +184,20 @@ pub fn base_m_to_base_n_usize(number: &str,base_m: usize, base_n: usize,
     return base_n_prefix + &leading_zeros + &base_n_str
 }
 
-pub fn pretty(base_m: usize, base_n: usize, mut word_length: usize) ->
-    (char, usize, usize, String) {
+pub fn pretty(base_m: usize, base_n: usize,
+              mut word_length: usize) -> (char, usize, usize, String) {
 
-    let mut pretty_char = ' ';
-    if base_n == 10 {
-        pretty_char = ',';
-        word_length = 3;
-    }
-    let mut prefix = 0;
-    if base_m != 10 { prefix = 2 };
+    let pretty_char = match base_n {
+        10 => {
+            word_length = 3;
+            ','
+        },
+        _  => ' '
+    };
+    let prefix = match base_m {
+        10 => 0,
+        _  => 2
+    };
     let base_n_prefix = match base_n {
         2   => "0b",
         8   => "0o",
@@ -203,12 +210,11 @@ pub fn pretty(base_m: usize, base_n: usize, mut word_length: usize) ->
 }
 
 pub fn usize_from_opt(param: &str, default_val: &str, matches: &Matches) -> usize {
-    let number;
     let num_str = match matches.opt_str(param) {
         Some(string)    => string,
         _               => default_val.to_string()
     };
-    match usize::from_str(&num_str) {
+    let number = match usize::from_str(&num_str) {
         Ok(num)   => { number = num },
         _         => { number = 0 },
     }
@@ -216,7 +222,7 @@ pub fn usize_from_opt(param: &str, default_val: &str, matches: &Matches) -> usiz
 }
 
 fn bad_char_fail(c: char) -> String {
-    println!("{}", BAD_FORMAT_STR);
+    println!("{}", BAD_FORMAT);
     println!("Offending char was {}", c);
     return "0".to_owned();
 }
