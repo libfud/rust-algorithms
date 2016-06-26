@@ -1,0 +1,7 @@
+[package]
+name = "base_conv"
+version = "0.1.0"
+authors = ["Dominick Allen <dja5371@psu.edu>"]
+
+[dependencies]
+getopts = "0.2"
