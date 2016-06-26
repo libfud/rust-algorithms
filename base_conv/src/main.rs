@@ -3,7 +3,6 @@
 
 extern crate getopts;
 
-//use std::str::Graphemes;
 use std::str::FromStr;
 use std::env;
 use std::iter::repeat;
@@ -41,18 +40,16 @@ static CHAR_ARRAY : [char; 256] = [
     '也', '亡', '光', '猫', '犬', '具'
 ];
 
-static MAX_SIZE: usize = !0;
-
 static BAD_FORMAT_STR: &'static str = 
     "Badly formatted number or bad value for base. Returning 0 in decimal.";
 
 /// Check that an input number is properly formatted for its base
 pub fn check_sanity(number: &str, base_m: usize, base_n: usize) -> bool {
-    if base_m != 10 {
-        if &number[..1] != "0" {
+    if base_m != 10 { //decimal, usually not prefixed
+        if &number[..1] != "0" || number.len() < 3 { //prefix & 1st digit
             return false;
         }
-        match &number[1..2] {
+        match &number[1..2] { //seeing if the second character is a reserved one
             "b"|"o"|"x"|"n" => {}, // do nothing, it's ok
             _               => {
                 return false;
@@ -70,7 +67,7 @@ pub fn check_sanity(number: &str, base_m: usize, base_n: usize) -> bool {
     let max_binary = std::mem::size_of::<usize>() * 8;
     let mut max_possible = 8; //256^8 == 2^64
     for x in 1..max_binary {
-        if base_m.pow(x as u32) >= MAX_SIZE / base_m {
+        if base_m.pow(x as u32) >= std::usize::MAX/ base_m {
             max_possible = x;
             break;
         }
